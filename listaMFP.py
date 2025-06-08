@@ -29,7 +29,8 @@ def merger_playlist():
     url1 = "channels_italy.m3u8"  # File locale
     url2 = "eventi.m3u8"   
     url3 = "https://raw.githubusercontent.com/Brenders/Pluto-TV-Italia-M3U/main/PlutoItaly.m3u"  # Remoto
-    url5 = "eventisps.m3u8"      # File locale (aggiunto come in merger_playlistworld)
+    url5 = "eventisps.m3u8" 
+    url6 = "eventisz.m3u8" 
     
     # Funzione per scaricare o leggere una playlist
     def download_playlist(source, append_params=False, exclude_group_title=None):
@@ -56,10 +57,11 @@ def merger_playlist():
     playlist1 = download_playlist(url1)
     playlist2 = download_playlist(url2, append_params=True)
     playlist3 = download_playlist(url3)
-    playlist5 = download_playlist(url5) # Aggiunto download per url5
+    playlist5 = download_playlist(url5)
+    playlist6 = download_playlist(url6)
     
     # Unisci le playlist
-    lista = playlist1 + "\n" + playlist2 + "\n" + playlist3 + "\n" + playlist5 # Aggiunto playlist5 all'unione
+    lista = playlist1 + "\n" + playlist2 + "\n" + playlist3 + "\n" + playlist5 + "\n" + playlist6
     
     # Aggiungi intestazione EPG
     lista = f'#EXTM3U x-tvg-url="https://raw.githubusercontent.com/{NOMEGITHUB}/{NOMEREPO}/refs/heads/main/epg.xml"\n' + lista
@@ -94,6 +96,7 @@ def merger_playlistworld():
     url3 = "https://raw.githubusercontent.com/Brenders/Pluto-TV-Italia-M3U/main/PlutoItaly.m3u"  # Remoto
     url4 = "world.m3u8"           # File locale
     url5 = "eventisps.m3u8"      # File locale
+    url6 = "eventisz.m3u8" 
     
     # Funzione per scaricare o leggere una playlist
     def download_playlist(source, append_params=False, exclude_group_title=None):
@@ -122,9 +125,10 @@ def merger_playlistworld():
     playlist3 = download_playlist(url3)
     playlist4 = download_playlist(url4, exclude_group_title="Italy")
     playlist5 = download_playlist(url5)
-    
+    playlist6 = download_playlist(url6)
+
     # Unisci le playlist
-    lista = playlist1 + "\n" + playlist2 + "\n" + playlist3 + "\n" + playlist4 + "\n" + playlist5
+    lista = playlist1 + "\n" + playlist2 + "\n" + playlist3 + "\n" + playlist4 + "\n" + playlist5 + "\n" + playlist6
     
     # Aggiungi intestazione EPG
     lista = f'#EXTM3U x-tvg-url="https://raw.githubusercontent.com/{NOMEGITHUB}/{NOMEREPO}/refs/heads/main/epg.xml"\n' + lista
@@ -135,6 +139,625 @@ def merger_playlistworld():
         file.write(lista)
     
     print(f"Playlist combinata salvata in: {output_filename}")
+
+def eventi_sz():
+    import requests
+    from bs4 import BeautifulSoup
+    import re
+    import time
+    import json
+    from urllib.parse import urljoin, urlparse
+    from urllib.parse import parse_qs, quote
+    import os
+    from dotenv import load_dotenv
+    try:
+        from PIL import Image, UnidentifiedImageError
+    except ImportError:
+        print("Pillow library not found. Please install it: pip install Pillow")
+        # You might want to exit or handle this more gracefully if Pillow is essential
+        Image = None 
+        UnidentifiedImageError = None
+    import hashlib
+    import io
+
+    # Carica le variabili d'ambiente dal file .env
+    load_dotenv()
+
+    MFP_IP = os.getenv("IPMFP", "").strip()
+    MFP_PASSWORD = os.getenv("PASSMFP", "").strip()
+    NOMEREPO = os.getenv("NOMEREPO", "").strip()
+    NOMEGITHUB = os.getenv("NOMEGITHUB", "").strip()
+
+    class SportZoneScraper:
+        STATIC_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        STATIC_USER_AGENT_ENCODED = 'Mozilla/5.0%20(Windows%20NT%2010.0;%20Win64;%20x64)%20AppleWebKit/537.36%20(KHTML,%20like%20Gecko)%20Chrome/120.0.0.0%20Safari/537.36'
+
+        def __init__(self):
+            self.base_url = os.getenv("LINK_SPORTZONE", "https://sportzone.yoga").strip()
+            self.session = requests.Session()
+            self.session.headers.update({
+                'User-Agent': self.STATIC_USER_AGENT,
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language': 'it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3',
+                'Accept-Encoding': 'gzip, deflate',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Referer': f'{self.base_url}/'
+            })
+            self.logos_dir = "logos"
+            os.makedirs(self.logos_dir, exist_ok=True)
+        
+        def get_page_content(self, url):
+            """Ottiene il contenuto HTML di una pagina"""
+            try:
+                response = self.session.get(url, timeout=15)
+                response.raise_for_status()
+                return response.text
+            except requests.RequestException as e:
+                print(f"Errore nel recuperare {url}: {e}")
+                return None
+        
+        def extract_match_links(self, html_content):
+            """Estrae i link delle partite dalla pagina calcio con selettori più specifici"""
+            soup = BeautifulSoup(html_content, 'html.parser')
+            match_links = []
+            
+            # Cerca diversi pattern comuni per i link delle partite
+            selectors = [
+                'a[href*="match"]',
+                'a[href*="partita"]', 
+                'a[href*="live"]',
+                'a[href*="stream"]',
+                '.match-link a',
+                '.game-link a',
+                '.event-link a',
+                'article a',
+                '.post-title a',
+                '.entry-title a',
+                '.post a',
+                '.item a',
+                '.content a'
+            ]
+            
+            for selector in selectors:
+                links = soup.select(selector)
+                for link in links:
+                    href = link.get('href')
+                    if href:
+                        title = link.get_text(strip=True)
+                        if title and len(title) > 2:  # Evita link con titoli troppo corti o vuoti
+                            full_url = urljoin(self.base_url, href)
+                            
+                            # Escludi link che sono pagine di categoria o serie
+                            if '/category/' in full_url.lower() or '/series/' in full_url.lower():
+                                continue # Salta questo link
+                                
+                            match_links.append({'title': title, 'url': full_url})
+            
+            # Se non trova nulla con i selettori, cerca tutti i link
+            if not match_links:
+                print("🔍 Nessun link trovato con selettori specifici, cerco tutti i link...")
+                for link in soup.find_all('a', href=True):
+                    href = link.get('href')
+                    title = link.get_text(strip=True)
+                    if href and title and len(title) > 2:
+                        # Filtra solo link che sembrano essere partite o contenuti sportivi
+                        keywords = ['match', 'partita', 'live', 'vs', 'serie', 'champions', 'europa', 
+                                   'calcio', 'football', 'streaming', 'diretta', 'oggi', 'domani']
+                        if any(keyword in href.lower() or keyword in title.lower() for keyword in keywords):
+                            full_url = urljoin(self.base_url, href)
+
+                            # Escludi link che sono pagine di categoria o serie anche qui
+                            if '/category/' in full_url.lower() or '/series/' in full_url.lower():
+                                continue # Salta questo link
+
+                            match_links.append({'title': title, 'url': full_url})
+
+            
+            # Rimuovi duplicati
+            seen_urls = set()
+            unique_matches = []
+            for match in match_links:
+                if match['url'] not in seen_urls:
+                    seen_urls.add(match['url'])
+                    unique_matches.append(match)
+            
+            return unique_matches
+        
+        def extract_stream_urls(self, match_url, original_match_title=""):
+            """Estrae gli URL di streaming con tecniche avanzate"""
+            html_content = self.get_page_content(match_url)
+            if not html_content:
+                print(f"    ⚠️  Impossibile ottenere contenuto da {match_url} per estrarre stream.")
+                return []
+            
+            soup = BeautifulSoup(html_content, 'html.parser')
+            stream_urls = []
+            
+            # 1. Cerca iframe (molto comune per gli embed)
+            for iframe in soup.find_all('iframe'):
+                src = iframe.get('src') or iframe.get('data-src')
+                if src:
+                    full_url = urljoin(self.base_url, src)
+                    stream_urls.append(full_url)
+            
+            # 2. Cerca video tags
+            for video in soup.find_all('video'):
+                src = video.get('src') or video.get('data-src')
+                if src:
+                    stream_urls.append(urljoin(self.base_url, src))
+                
+                # Cerca anche nei source tags dentro video
+                for source in video.find_all('source'):
+                    src = source.get('src')
+                    if src:
+                        stream_urls.append(urljoin(self.base_url, src))
+            
+            # 3. Cerca negli script JavaScript con pattern più avanzati
+            for script in soup.find_all('script'):
+                if script.string:
+                    script_content = script.string
+                    
+                    # Pattern per URL di streaming
+                    patterns = [
+                        r'["\']([^"\']*.m3u8[^"\']*)["\']',
+                        r'["\']([^"\']*.mp4[^"\']*)["\']',
+                        r'["\']([^"\']*.ts[^"\']*)["\']',
+                        r'src[\s]*:[\s]*["\']([^"\']*)["\']',
+                        r'url[\s]*:[\s]*["\']([^"\']*)["\']',
+                        r'stream[\s]*:[\s]*["\']([^"\']*)["\']',
+                        r'player[\s]*:[\s]*["\']([^"\']*)["\']',
+                        r'https?://[^\s"\'>]+\.m3u8[^\s"\'>]*',
+                        r'https?://[^\s"\'>]+\.mp4[^\s"\'>]*',
+                        r'file[\s]*:[\s]*["\']([^"\']*)["\']',
+                        r'source[\s]*:[\s]*["\']([^"\']*)["\']'
+                    ]
+                    
+                    for pattern in patterns:
+                        matches = re.findall(pattern, script_content, re.IGNORECASE)
+                        for match in matches:
+                            if match.startswith('http') or match.startswith('//'):
+                                stream_urls.append(match)
+                            elif match.startswith('/'):
+                                stream_urls.append(urljoin(self.base_url, match))
+            
+            # 4. Cerca link diretti a file multimediali
+            for link in soup.find_all('a', href=True):
+                href = link.get('href')
+                if href and any(ext in href.lower() for ext in ['.m3u8', '.mp4', '.ts', '.flv', '.avi', '.mkv']):
+                    stream_urls.append(urljoin(self.base_url, href))
+            
+            # 5. Cerca attributi data-* che potrebbero contenere URL
+            data_attributes = ['data-src', 'data-url', 'data-stream', 'data-file', 'data-video']
+            for attr in data_attributes:
+                for element in soup.find_all(attrs={attr: True}):
+                    data_value = element.get(attr)
+                    if data_value:
+                        stream_urls.append(urljoin(self.base_url, data_value))
+            
+            # 6. Cerca nei meta tags
+            for meta in soup.find_all('meta'):
+                content = meta.get('content', '')
+                if content and any(ext in content.lower() for ext in ['.m3u8', '.mp4']):
+                    if content.startswith('http'):
+                        stream_urls.append(content)
+            
+            # Filtra e pulisci gli URL
+            cleaned_urls = []
+            for url in stream_urls:
+                if url and url.startswith('http'):
+                    # Rimuovi parametri di tracking comuni
+                    clean_url = re.sub(r'[?&](utm_|ref|track)', '', url)
+                    
+                    parsed_url = urlparse(clean_url)
+                    domain = parsed_url.netloc.lower()
+                    path = parsed_url.path.lower()
+
+                    # Gestione speciale per newembedplay.xyz/calcio.php
+                    if domain == 'newembedplay.xyz' and path == '/calcio.php':
+                        query_parameters = parse_qs(parsed_url.query)
+                        stream_id_list = query_parameters.get('id')
+                        if stream_id_list:
+                            stream_id = stream_id_list[0] # Prendi il primo valore dell'id
+                            new_kso_url = f"https://new.newkso.ru/calcio/calcio{stream_id}/mono.m3u8"
+                            if len(new_kso_url) > 10 and new_kso_url not in cleaned_urls:
+                                print(f"    🔄 Trasformato URL: {clean_url[:60]}... -> {new_kso_url}")
+                                cleaned_urls.append(new_kso_url)
+                            continue # URL processato (trasformato o scartato se id non valido), passa al prossimo
+
+
+                    # Lista di domini da escludere a priori (pagine di embed generiche, pubblicità)
+                    generic_embed_domains = [
+                        'newembedplay.xyz', 'embedsito.net', 'playeronline.xyz', 'streamgo.to',
+                        'playhd.xyz', 'streaminghd.live', # Aggiungere altri domini problematici osservati
+                    ]
+
+                    if any(ex_domain in domain for ex_domain in generic_embed_domains):
+                        print(f"    ⚠️  URL scartato (dominio di embed generico): {clean_url[:80]}...")
+                        continue
+                    
+                    # Filtro specifico per "calcio.php" se il titolo non è calcistico
+                    is_calcio_event = "calcio" in original_match_title.lower()
+                    if "calcio.php" in path and not is_calcio_event:
+                        print(f"    ⚠️  URL scartato ('calcio.php' in evento non calcistico '{original_match_title[:30]}...'): {clean_url[:80]}...")
+                        continue
+
+                    # Aggiungi solo se non già presente e di lunghezza ragionevole
+                    if len(clean_url) > 10 and clean_url not in cleaned_urls:
+                        cleaned_urls.append(clean_url)
+            
+            
+            return cleaned_urls
+        
+        def _clean_m3u_title(self, title_str):
+            """Cleans and formats a title string for M3U8 playlist."""
+            processed_title = title_str
+            time_component = ""
+
+            # 1. Extract and format time (HH:MM), then remove it from the main title string.
+            #    Handles HH:MM, H:M, HH.MM, H.M, with optional AM/PM.
+            #    The time will be put in parentheses, e.g., (HH:MM).
+            time_pattern = r'\b(\d{1,2})[:.](\d{1,2})\b(?:\s*(?:AM|PM|A\.M\.|P\.M\.))?'
+            
+            def time_replacer(match):
+                nonlocal time_component
+                hours = match.group(1).zfill(2) # Format hours to HH
+                minutes = match.group(2).zfill(2) # Format minutes to MM
+                time_component = f"({hours}:{minutes})"
+                return "" # Remove the time from its original position
+
+            # Apply substitution to extract time and remove it from processed_title
+            # count=1 ensures only the first occurrence of time is processed.
+            processed_title, num_subs = re.subn(time_pattern, time_replacer, processed_title, count=1, flags=re.IGNORECASE)
+            if num_subs > 0:
+                processed_title = processed_title.strip() # Clean spaces left by removal
+
+            # 2. Handle |: Ensure it's surrounded by spaces.
+            processed_title = processed_title.replace('|', ' | ')
+
+            # 3. Insert space before date if concatenated (e.g., "TeamNameYYYY-MM-DD").
+            # Example: "EventName2025-01-01" -> "EventName 2025-01-01"
+            processed_title = re.sub(r'(\w)(\d{4}-\d{2}-\d{2})', r'\1 \2', processed_title)
+
+            # 4. Remove Date (YYYY-MM-DD), replacing it and any surrounding spaces with a single space.
+            processed_title = re.sub(r'\s*\d{4}-\d{2}-\d{2}\s*', ' ', processed_title)
+
+            # 5. Clean unwanted characters:
+            # Keep letters, numbers, spaces, hyphens (e.g., for team names), and pipes.
+            # Colons are removed from the allowed set as time is now handled separately.
+            processed_title = re.sub(r'[^\w\s\-\|]', '', processed_title)
+
+            # 6. Normalize multiple spaces to single spaces and strip leading/trailing whitespace.
+            processed_title = re.sub(r'\s+', ' ', processed_title).strip()
+            
+            # 7. Append the extracted and formatted time component if it exists.
+            if time_component:
+                if processed_title: # If title is not empty after cleaning
+                    processed_title = f"{processed_title} {time_component}"
+                else: # If title became empty (e.g., was just a date and time)
+                    processed_title = time_component
+            
+            return processed_title
+
+        def _make_logo_filename(self, text_identifier):
+            """Creates a unique, filesystem-safe filename for a logo using a hash."""
+            hasher = hashlib.md5()
+            hasher.update(text_identifier.encode('utf-8'))
+            filename_hash = hasher.hexdigest()
+            return f"{filename_hash}.png"
+
+        def extract_and_combine_team_logos(self, event_page_url, event_title):
+            """
+            Extracts two team logos from an event page, combines them side-by-side,
+            and saves the result.
+            Returns the path to the combined logo, or None if unsuccessful.
+            Requires Pillow library.
+            """
+            if not Image or not UnidentifiedImageError:
+                print("      ⚠️  Pillow library is not available. Cannot process logos.")
+                return None
+
+            print(f"      🖼️  Fetching event page for logos: {event_page_url}")
+            html_content = self.get_page_content(event_page_url)
+            if not html_content:
+                print(f"      ⚠️  Could not get content from {event_page_url} for logos.")
+                return None
+
+            soup = BeautifulSoup(html_content, 'html.parser')
+            logo_img_tags = []
+
+            # --- !!! CRITICAL SECTION - ADJUST SELECTORS !!! ---
+            # The following selectors are GENERIC GUESSES. You MUST inspect the HTML
+            # of your target event pages (those with '/event/' in the URL or similar)
+            # and update these selectors to accurately find the two team logo images.
+            # Examples:
+            # - If logos are <div class="home-team-logo"><img src="..."></div> and <div class="away-team-logo"><img src="..."></div>
+            #   Use: soup.select('.home-team-logo img') and soup.select('.away-team-logo img')
+            # - Or look for specific IDs, or images within certain article structures.
+
+            # Updated selector based on the provided HTML structure: <img class="tist" src="...">
+            potential_logo_containers = soup.select('img.tist')
+            if len(potential_logo_containers) >= 2:
+                logo_img_tags = potential_logo_containers[:2] # Take the first two plausible ones
+            
+            if len(logo_img_tags) < 2:
+                print(f"      ⚠️  Found {len(logo_img_tags)} potential logo image tag(s) using generic selectors for '{event_title}'. Need 2. Please refine selectors.")
+                return None
+
+            logo_urls = [urljoin(event_page_url, img.get('src')) for img in logo_img_tags if img.get('src')]
+            if len(logo_urls) < 2:
+                print(f"      ⚠️  Could not extract 2 valid logo URLs for '{event_title}'.")
+                return None
+                
+            print(f"      Found logo URLs: {logo_urls[0]}, {logo_urls[1]}")
+
+            images = []
+            for i, logo_url in enumerate(logo_urls[:2]):
+                try:
+                    print(f"        Downloading logo {i+1}: {logo_url}")
+                    img_response = self.session.get(logo_url, timeout=10, stream=True)
+                    img_response.raise_for_status()
+                    img_data = io.BytesIO(img_response.content)
+                    img = Image.open(img_data)
+                    images.append(img)
+                except requests.RequestException as e:
+                    print(f"      ❌ Error downloading logo {logo_url}: {e}")
+                    return None
+                except UnidentifiedImageError:
+                    print(f"      ❌ Error: Cannot identify image file {logo_url}.")
+                    return None
+                except Exception as e:
+                    print(f"      ❌ Unexpected error processing logo {logo_url}: {e}")
+                    return None
+
+            if len(images) != 2: return None
+            img1, img2 = images
+
+            target_height = 64 # Desired height for logos
+            img1 = img1.resize((int(img1.width * target_height / img1.height), target_height), Image.Resampling.LANCZOS)
+            img2 = img2.resize((int(img2.width * target_height / img2.height), target_height), Image.Resampling.LANCZOS)
+
+            combined_width = img1.width + img2.width
+            combined_height = target_height
+            combined_image = Image.new('RGBA', (combined_width, combined_height), (255, 255, 255, 0))
+            combined_image.paste(img1, (0, 0), img1.convert('RGBA'))
+            combined_image.paste(img2, (img1.width, 0), img2.convert('RGBA'))
+
+            combined_logo_filename = self._make_logo_filename(event_page_url)
+            combined_logo_path = os.path.join(self.logos_dir, combined_logo_filename)
+            combined_image.save(combined_logo_path, "PNG")
+            print(f"      ✅ Combined logo saved: {combined_logo_path}")
+            return combined_logo_path
+
+        def create_m3u8_playlist(self, matches_data, filename="eventisz.m3u8"):
+            """Crea una playlist M3U8 con tutti i match trovati"""
+            playlist_content = "#EXTM3U\n\n" # Inizia con #EXTM3U
+
+            # Aggiungi il canale statico SPORTZONE
+            sportzone_url = f"{self.base_url}" 
+            playlist_content += f'#EXTINF:-1 tvg-name="SPORTZONE" group-title="Eventi Live",SPORTZONE\n'
+            playlist_content += f'{sportzone_url}\n'
+            MOTOGP_LOGO_URL = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/30fe8b41-1200-49f2-9d7e-8c604d04d601/d3bsjwp-3d0220a9-6673-4a17-b398-08c3d7208997.png/v1/fill/w_1024,h_676,strp/motogp_logo_by_grishnak_mcmlxxix_d3bsjwp-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9Njc2IiwicGF0aCI6IlwvZlwvMzBmZThiNDEtMTIwMC00OWYyLTlkN2UtOGM2MDRkMDRkNjAxXC9kM2JzandwLTNkMDIyMGE5LTY2NzMtNGExNy1iMzk4LTA4YzNkNzIwODk5Ny5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.d9DcxJeZ_XzlyLYfrxe4qnnhuDkGItSXgvgnSTjkhEY"
+            FORMULA1_LOGO_URL = "https://logodownload.org/wp-content/uploads/2016/11/formula-1-logo-2-2.png"
+            
+            for match in matches_data:
+                title = match.get('title', 'Unknown Match')
+                streams = match.get('streams', [])
+                event_page_url = match.get('url', '') # Corrected: 'url' is the key for the event page
+                tvg_logo_path = match.get('tvg_logo_path')
+                match_category = match.get('category', 'Sport') # Categoria specifica del match
+
+                # Se non ci sono stream, salta questo evento e non aggiungerlo alla playlist
+                if not streams:
+                    print(f"      ℹ️  Skipping '{title}' from playlist: No streams found.")
+                    continue
+
+                tvg_logo_attr = ""
+                if match_category == "Motogp": # "Motogp" è come viene generato da .title()
+                    tvg_logo_attr = f' tvg-logo="{MOTOGP_LOGO_URL}"'
+                elif match_category == "Formula 1": # "Formula 1" è come viene generato da .title()
+                    tvg_logo_attr = f' tvg-logo="{FORMULA1_LOGO_URL}"'
+                elif tvg_logo_path:
+                    # tvg_logo_path is the OS-specific local path, e.g., "logos\hash.png" or "logos/hash.png"
+                    logo_filename = os.path.basename(tvg_logo_path)
+                    if NOMEGITHUB and NOMEREPO:
+                        # Construct GitHub raw URL. Assuming 'main' as the default branch.
+                        # self.logos_dir is "logos".
+                        github_logo_url = f"https://raw.githubusercontent.com/{NOMEGITHUB}/{NOMEREPO}/main/{self.logos_dir}/{logo_filename}"
+                        tvg_logo_attr = f' tvg-logo="{github_logo_url}"'
+                    else:
+                        # Fallback to relative path, ensuring forward slashes for M3U8
+                        standardized_local_path = tvg_logo_path.replace('\\', '/')
+                        print(f"      ⚠️  NOMEGITHUB o NOMEREPO non impostati nel .env. Uso percorso relativo per il logo: {standardized_local_path}")
+                        tvg_logo_attr = f' tvg-logo="{standardized_local_path}"'
+                
+                # Dato che abbiamo già verificato la presenza di 'streams', procediamo ad aggiungerli
+                for stream_url in streams:
+                    # Aggiungi i parametri richiesti agli stream URL e URL-encode User-Agent
+                    if '?' in stream_url:
+                        modified_stream_url = f"{stream_url}&h_user-agent={self.STATIC_USER_AGENT}&h_referer={self.base_url}/&h_origin={self.base_url}"
+                    else:
+                        modified_stream_url = f"{stream_url}&h_user-agent={self.STATIC_USER_AGENT}&h_referer={self.base_url}/&h_origin={self.base_url}"
+                    
+                    clean_title = self._clean_m3u_title(title)
+                    playlist_content += f'#EXTINF:-1 group-title="Eventi Live" tvg-name="{clean_title}"{tvg_logo_attr},{clean_title}\n'
+                    if MFP_IP and MFP_PASSWORD:
+                        playlist_content += f'{MFP_IP.rstrip('/')}/proxy/hls/manifest.m3u8?api_password={MFP_PASSWORD}&d={modified_stream_url}\n'
+                    else:
+                        playlist_content += f'{modified_stream_url}\n'
+
+            # Salva la playlist
+            with open(filename, 'w', encoding='utf-8') as f:
+                f.write(playlist_content)
+            
+            print(f"Playlist M3U8 salvata come {filename}")
+            return filename
+        
+        def scrape_calcio_matches(self, max_matches=20):
+            """Funzione principale migliorata"""
+            print("🚀 Inizio scraping di SportZone Calcio (solo requests)...")
+            
+            # Lista di URL da provare
+            urls_to_try = [
+                f"{self.base_url}/category/Calcio/1",
+                f"{self.base_url}/category/FORMULA%201/1",
+                f"{self.base_url}/category/MotoGP/1",
+                f"{self.base_url}/category/Tennis/1",
+                f"{self.base_url}/category/Basket/1"
+            ]
+            
+            all_matches = []
+            
+            for url in urls_to_try:
+                print(f"🔍 Tentativo con: {url}")
+                
+                # Estrai la categoria dall'URL per usarla nel group-title
+                category_match = re.search(r'/category/([^/]+)', url, re.IGNORECASE)
+                category_name = "Sport" # Default
+                if category_match:
+                    cat_raw = category_match.group(1)
+                    cat_decoded = requests.utils.unquote(cat_raw) # Gestisce %20 etc.
+                    category_name = cat_decoded.replace('-', ' ').replace('_', ' ').title() # Pulisce e formatta
+
+                html_content = self.get_page_content(url)
+                if html_content:
+                    matches_from_url = self.extract_match_links(html_content)
+                    if matches_from_url:
+                        print(f"✅ Trovate {len(matches_from_url)} partite in {url} (Categoria: {category_name})")
+                        for match_item in matches_from_url:
+                            match_item['category'] = category_name # Associa la categoria al match
+                        all_matches.extend(matches_from_url)
+                    else:
+                        print(f"❌ Nessuna partita trovata in {url}")
+                else:
+                    print(f"❌ Impossibile accedere a {url}")
+            
+            if not all_matches:
+                print("❌ Nessuna partita trovata in nessun URL")
+                return []
+            
+            # Rimuovi duplicati
+            seen_urls = set()
+            unique_matches = []
+            for match in all_matches:
+                if match['url'] not in seen_urls:
+                    seen_urls.add(match['url'])
+                    unique_matches.append(match)
+            
+            print(f"📊 Totale partite uniche trovate: {len(unique_matches)}")
+            
+            # Limita il numero di partite da processare
+            matches_to_process = unique_matches[:max_matches]
+            matches_data = []
+            
+            for i, match in enumerate(matches_to_process, 1):
+                print(f"⚽ Elaborando {i}/{len(matches_to_process)}: {match['title'][:50]}...")
+                
+                combined_logo_path = None
+                # Attempt to get logos if it seems like an event page that might have them
+                # The condition "/event/" is a heuristic based on your description.
+                # Adjust if your event pages have a different URL pattern.
+                if "/event/" in match['url'].lower() or " vs " in match['title'].lower() : # Added " vs " as another heuristic
+                    print(f"    Trying to extract logos for: {match['title'][:50]} from {match['url']}")
+                    combined_logo_path = self.extract_and_combine_team_logos(match['url'], match['title'])
+
+                streams = self.extract_stream_urls(match['url'], match['title']) # Passa anche il titolo originale
+                
+                matches_data.append({
+                    'title': match['title'],
+                    'url': match['url'],
+                    'streams': streams,
+                    'stream_count': len(streams),
+                    'category': match.get('category', 'Sport'), # Propaga la categoria
+                    'tvg_logo_path': combined_logo_path
+                })
+                
+                if streams:
+                    print(f"  ✅ Trovati {len(streams)} stream")
+                    for stream in streams[:2]:  # Mostra solo i primi 2
+                        print(f"    🔗 {stream[:80]}...")
+                else:
+                    print(f"  ❌ Nessuno stream trovato")
+                if combined_logo_path:
+                    print(f"  🖼️  Logo generato: {combined_logo_path}")
+                
+                # Pausa per evitare sovraccarico
+                time.sleep(1.5)
+            
+            return matches_data
+
+    def main():
+        """Funzione principale per eseguire lo scraping"""
+        print("🚀 Avvio SportZone Scraper...")
+        scraper = SportZoneScraper()
+        
+        try:
+            matches = scraper.scrape_calcio_matches(max_matches=50)
+            
+            if matches:
+                playlist = scraper.create_m3u8_playlist(matches)
+                
+                print("\n" + "=" * 50)
+                print("📋 RIEPILOGO RISULTATI")
+                print("=" * 50)
+                
+                total_streams = sum(match['stream_count'] for match in matches)
+                matches_with_streams = sum(1 for match in matches if match['stream_count'] > 0)
+                
+                print(f"📊 Partite totali: {len(matches)}")
+                print(f"🎥 Partite con stream: {matches_with_streams}")
+                print(f"🔗 Stream totali trovati: {total_streams}")
+                
+                print("\n📝 DETTAGLIO PARTITE:")
+                for i, match in enumerate(matches, 1):
+                    status = "✅" if match['stream_count'] > 0 else "❌"
+                    logo_status = "🖼️" if match.get('tvg_logo_path') else "▫️"
+                    print(f"{i:2d}. {status} {logo_status} {match['title'][:60]}... ({match['stream_count']} stream)")
+                
+                print("\nNote:")
+                print("- 🖼️ indica che un logo combinato è stato generato.")
+                print("- ▫️ indica che non è stato generato un logo combinato per l'evento.")
+                if total_streams > 0:
+                    print(f"\n🎉 Playlist generata con successo!")
+                    print(f"📁 File: {playlist}")
+                elif matches_with_streams == 0 and len(matches) > 0:
+                    print(f"📄 Playlist creata con le pagine delle partite.")
+            else:
+                print("❌ Nessuna partita trovata")
+        
+        except KeyboardInterrupt:
+            print("\n⏹️  Scraping interrotto dall'utente")
+        except Exception as e:
+            print(f"❌ Errore durante lo scraping: {e}")
+            import traceback
+            traceback.print_exc()
+
+    if __name__ == "__main__":
+        main()
+
+    # Aggiungi questo codice per creare sempre la lista anche se vuota
+    try:
+        # Ottieni la directory dove si trova lo script
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        playlist_file = os.path.join(script_directory, "eventisz.m3u8")
+        
+        # Se il file non esiste o è vuoto, crea una playlist vuota
+        if not os.path.exists(playlist_file) or os.path.getsize(playlist_file) == 0:
+            with open(playlist_file, 'w', encoding='utf-8') as f:
+                f.write('#EXTM3U\n')
+            print(f"📄 Creata playlist vuota: {playlist_file}")
+        else:
+            print(f"📁 Playlist esistente: {playlist_file}")
+    except Exception as e:
+        print(f"❌ Errore nella creazione della playlist vuota: {e}")
+        # Crea comunque il file vuoto
+        try:
+            script_directory = os.path.dirname(os.path.abspath(__file__))
+            playlist_file = os.path.join(script_directory, "eventisz.m3u8")
+            with open(playlist_file, 'w', encoding='utf-8') as f:
+                f.write('#EXTM3U\n')
+        except:
+            pass
 
 # Funzione per il secondo script (epg_merger.py)
 def epg_merger():
@@ -2829,7 +3452,7 @@ def removerworld():
     import os
     
     # Lista dei file da eliminare
-    files_to_delete = ["world.m3u8", "eventisps.m3u8", "channels_italy.m3u8", "eventi.m3u8", "eventi.xml"]
+    files_to_delete = ["eventisz.m3u8", "world.m3u8", "eventisps.m3u8", "channels_italy.m3u8", "eventi.m3u8", "eventi.xml"]
     
     for filename in files_to_delete:
         if os.path.exists(filename):
@@ -2845,7 +3468,7 @@ def remover():
     import os
     
     # Lista dei file da eliminare
-    files_to_delete = ["channels_italy.m3u8", "eventi.m3u8", "eventisps.m3u8", "eventi.xml"]
+    files_to_delete = ["eventisz.m3u8", "channels_italy.m3u8", "eventi.m3u8", "eventisps.m3u8", "eventi.xml"]
     
     for filename in files_to_delete:
         if os.path.exists(filename):
@@ -2870,6 +3493,11 @@ def main():
         print(f"Errore durante l'esecuzione di eventi_sps: {e}")
         return
 
+    try:
+        eventi_sz()
+    except Exception as e:
+        print(f"Errore durante l'esecuzione di eventi_sps: {e}")
+        return
 
     eventi_en = os.getenv("EVENTI_EN", "no").strip().lower()
     world_flag = os.getenv("WORLD", "si").strip().lower()
