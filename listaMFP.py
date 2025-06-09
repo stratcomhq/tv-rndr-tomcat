@@ -1422,14 +1422,20 @@ def eventi_m3u8_generator_world():
      
     def generate_m3u_from_schedule(json_file, output_file): 
         categorized_channels = extract_channels_from_json(json_file) 
-     
+
         with open(output_file, "w", encoding="utf-8") as f: 
             f.write("#EXTM3U\n") 
 
-            # Aggiungi il canale iniziale/informativo
-            f.write(f'#EXTINF:-1 tvg-name="DADDYLIVE" group-title="Eventi Live",DADDYLIVE\n')
-            f.write("https://example.com.m3u8\n\n")
-     
+            # Controlla se ci sono eventi prima di aggiungere il canale DADDYLIVE
+            has_events = any(channels for channels in categorized_channels.values())
+            
+            if has_events:
+                # Aggiungi il canale iniziale/informativo solo se ci sono eventi
+                f.write(f'#EXTINF:-1 tvg-name="DADDYLIVE" group-title="Eventi Live",DADDYLIVE\n')
+                f.write("https://example.com.m3u8\n\n")
+            else:
+                print("[ℹ️] Nessun evento trovato, canale DADDYLIVE non aggiunto.")
+
             for category, channels in categorized_channels.items(): 
                 if not channels: 
                     continue 
@@ -1974,14 +1980,20 @@ def eventi_m3u8_generator():
      
     def generate_m3u_from_schedule(json_file, output_file): 
         categorized_channels = extract_channels_from_json(json_file) 
-     
+
         with open(output_file, "w", encoding="utf-8") as f: 
             f.write("#EXTM3U\n") 
 
-            # Aggiungi il canale iniziale/informativo
-            f.write(f'#EXTINF:-1 tvg-name="DADDYLIVE" group-title="Eventi Live",DADDYLIVE\n')
-            f.write("https://example.com.m3u8\n\n")
-     
+            # Controlla se ci sono eventi prima di aggiungere il canale DADDYLIVE
+            has_events = any(channels for channels in categorized_channels.values())
+            
+            if has_events:
+                # Aggiungi il canale iniziale/informativo solo se ci sono eventi
+                f.write(f'#EXTINF:-1 tvg-name="DADDYLIVE" group-title="Eventi Live",DADDYLIVE\n')
+                f.write("https://example.com.m3u8\n\n")
+            else:
+                print("[ℹ️] Nessun evento trovato, canale DADDYLIVE non aggiunto.")
+
             for category, channels in categorized_channels.items(): 
                 if not channels: 
                     continue 
