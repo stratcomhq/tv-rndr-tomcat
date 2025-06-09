@@ -28,9 +28,9 @@ def merger_playlist():
     # Percorsi o URL delle playlist M3U8
     url1 = "channels_italy.m3u8"  # File locale
     url2 = "eventi.m3u8"   
-    url3 = "https://raw.githubusercontent.com/Brenders/Pluto-TV-Italia-M3U/main/PlutoItaly.m3u"  # Remoto
-    url5 = "eventisps.m3u8" 
-    url6 = "eventisz.m3u8" 
+    url3 = "eventisps.m3u8"  # Remoto
+    url5 = "eventisz.m3u8"
+    url6 = "https://raw.githubusercontent.com/Brenders/Pluto-TV-Italia-M3U/main/PlutoItaly.m3u"
     
     # Funzione per scaricare o leggere una playlist
     def download_playlist(source, append_params=False, exclude_group_title=None):
@@ -91,12 +91,12 @@ def merger_playlistworld():
     NOMEGITHUB = os.getenv("NOMEGITHUB", "").strip()
     
     # Percorsi o URL delle playlist M3U8
-    url1 = "channels_italy.m3u8"  # File locale
+    url1 = "channels_italy.m3u8"  
     url2 = "eventi.m3u8"   
-    url3 = "https://raw.githubusercontent.com/Brenders/Pluto-TV-Italia-M3U/main/PlutoItaly.m3u"  # Remoto
-    url4 = "world.m3u8"           # File locale
-    url5 = "eventisps.m3u8"      # File locale
-    url6 = "eventisz.m3u8" 
+    url3 = "eventisz.m3u8" 
+    url4 = "eventisps.m3u8"           
+    url5 = "https://raw.githubusercontent.com/Brenders/Pluto-TV-Italia-M3U/main/PlutoItaly.m3u"      
+    url6 = "world.m3u8"
     
     # Funzione per scaricare o leggere una playlist
     def download_playlist(source, append_params=False, exclude_group_title=None):
@@ -448,15 +448,11 @@ def eventi_sz():
 
         def extract_and_combine_team_logos(self, event_page_url, event_title):
             """
-            Extracts two team logos from an event page, combines them side-by-side,
-            and saves the result.
-            Returns the path to the combined logo, or None if unsuccessful.
-            Requires Pillow library.
+            For football/calcio events, combines two logos side-by-side and saves locally.
+            For other sports, returns the URL of the first logo without saving.
+            Returns the path/URL to the logo, or None if unsuccessful.
+            Requires Pillow library for football events.
             """
-            if not Image or not UnidentifiedImageError:
-                print("      ⚠️  Pillow library is not available. Cannot process logos.")
-                return None
-
             print(f"      🖼️  Fetching event page for logos: {event_page_url}")
             html_content = self.get_page_content(event_page_url)
             if not html_content:
@@ -464,70 +460,87 @@ def eventi_sz():
                 return None
 
             soup = BeautifulSoup(html_content, 'html.parser')
-            logo_img_tags = []
-
-            # --- !!! CRITICAL SECTION - ADJUST SELECTORS !!! ---
-            # The following selectors are GENERIC GUESSES. You MUST inspect the HTML
-            # of your target event pages (those with '/event/' in the URL or similar)
-            # and update these selectors to accurately find the two team logo images.
-            # Examples:
-            # - If logos are <div class="home-team-logo"><img src="..."></div> and <div class="away-team-logo"><img src="..."></div>
-            #   Use: soup.select('.home-team-logo img') and soup.select('.away-team-logo img')
-            # - Or look for specific IDs, or images within certain article structures.
-
+            
             # Updated selector based on the provided HTML structure: <img class="tist" src="...">
             potential_logo_containers = soup.select('img.tist')
-            if len(potential_logo_containers) >= 2:
-                logo_img_tags = potential_logo_containers[:2] # Take the first two plausible ones
             
-            if len(logo_img_tags) < 2:
-                print(f"      ⚠️  Found {len(logo_img_tags)} potential logo image tag(s) using generic selectors for '{event_title}'. Need 2. Please refine selectors.")
-                return None
+            # Check if this is a football/calcio event
+            is_calcio_event = any(keyword in event_title.lower() for keyword in ['calcio'])
+            
+            if is_calcio_event:
+                # For football events, combine logos and save locally
+                if not Image or not UnidentifiedImageError:
+                    print("      ⚠️  Pillow library is not available. Cannot process logos.")
+                    return None
+                    
+                if len(potential_logo_containers) >= 2:
+                    logo_img_tags = potential_logo_containers[:2]
+                else:
+                    print(f"      ⚠️  Found {len(potential_logo_containers)} potential logo image tag(s) for football event '{event_title}'. Need 2 for combination.")
+                    # Fallback to single logo URL for football if can't find 2
+                    if len(potential_logo_containers) >= 1:
+                        logo_url = urljoin(event_page_url, potential_logo_containers[0].get('src'))
+                        print(f"      ✅ Using single logo URL for football event: {logo_url}")
+                        return logo_url
+                    return None
 
-            logo_urls = [urljoin(event_page_url, img.get('src')) for img in logo_img_tags if img.get('src')]
-            if len(logo_urls) < 2:
-                print(f"      ⚠️  Could not extract 2 valid logo URLs for '{event_title}'.")
-                return None
+                logo_urls = [urljoin(event_page_url, img.get('src')) for img in logo_img_tags if img.get('src')]
+                if len(logo_urls) < 2:
+                    print(f"      ⚠️  Could not extract 2 valid logo URLs for '{event_title}'.")
+                    return None
+                    
+                print(f"      Found logo URLs: {', '.join(logo_urls)}")
+
+                images = []
+                for i, logo_url in enumerate(logo_urls):
+                    try:
+                        print(f"        Downloading logo {i+1}: {logo_url}")
+                        img_response = self.session.get(logo_url, timeout=10, stream=True)
+                        img_response.raise_for_status()
+                        img_data = io.BytesIO(img_response.content)
+                        img = Image.open(img_data)
+                        images.append(img)
+                    except requests.RequestException as e:
+                        print(f"      ❌ Error downloading logo {logo_url}: {e}")
+                        return None
+                    except UnidentifiedImageError:
+                        print(f"      ❌ Error: Cannot identify image file {logo_url}.")
+                        return None
+                    except Exception as e:
+                        print(f"      ❌ Unexpected error processing logo {logo_url}: {e}")
+                        return None
+
+                if len(images) != 2:
+                    return None
+
+                # Combine two logos for football events
+                target_height = 64
+                img1, img2 = images
+                img1 = img1.resize((int(img1.width * target_height / img1.height), target_height), Image.Resampling.LANCZOS)
+                img2 = img2.resize((int(img2.width * target_height / img2.height), target_height), Image.Resampling.LANCZOS)
+
+                combined_width = img1.width + img2.width
+                combined_height = target_height
+                combined_image = Image.new('RGBA', (combined_width, combined_height), (255, 255, 255, 0))
+                combined_image.paste(img1, (0, 0), img1.convert('RGBA'))
+                combined_image.paste(img2, (img1.width, 0), img2.convert('RGBA'))
                 
-            print(f"      Found logo URLs: {logo_urls[0]}, {logo_urls[1]}")
-
-            images = []
-            for i, logo_url in enumerate(logo_urls[:2]):
-                try:
-                    print(f"        Downloading logo {i+1}: {logo_url}")
-                    img_response = self.session.get(logo_url, timeout=10, stream=True)
-                    img_response.raise_for_status()
-                    img_data = io.BytesIO(img_response.content)
-                    img = Image.open(img_data)
-                    images.append(img)
-                except requests.RequestException as e:
-                    print(f"      ❌ Error downloading logo {logo_url}: {e}")
-                    return None
-                except UnidentifiedImageError:
-                    print(f"      ❌ Error: Cannot identify image file {logo_url}.")
-                    return None
-                except Exception as e:
-                    print(f"      ❌ Unexpected error processing logo {logo_url}: {e}")
-                    return None
-
-            if len(images) != 2: return None
-            img1, img2 = images
-
-            target_height = 64 # Desired height for logos
-            img1 = img1.resize((int(img1.width * target_height / img1.height), target_height), Image.Resampling.LANCZOS)
-            img2 = img2.resize((int(img2.width * target_height / img2.height), target_height), Image.Resampling.LANCZOS)
-
-            combined_width = img1.width + img2.width
-            combined_height = target_height
-            combined_image = Image.new('RGBA', (combined_width, combined_height), (255, 255, 255, 0))
-            combined_image.paste(img1, (0, 0), img1.convert('RGBA'))
-            combined_image.paste(img2, (img1.width, 0), img2.convert('RGBA'))
-
-            combined_logo_filename = self._make_logo_filename(event_page_url)
-            combined_logo_path = os.path.join(self.logos_dir, combined_logo_filename)
-            combined_image.save(combined_logo_path, "PNG")
-            print(f"      ✅ Combined logo saved: {combined_logo_path}")
-            return combined_logo_path
+                logo_filename = self._make_logo_filename(event_page_url)
+                logo_path = os.path.join(self.logos_dir, logo_filename)
+                combined_image.save(logo_path, "PNG")
+                print(f"      ✅ Combined logo saved locally: {logo_path}")
+                return logo_path
+                
+            else:
+                # For non-football events, return the URL of the first logo without saving
+                if len(potential_logo_containers) >= 1:
+                    logo_url = urljoin(event_page_url, potential_logo_containers[0].get('src'))
+                    if logo_url:
+                        print(f"      ✅ Using existing logo URL for non-football event: {logo_url}")
+                        return logo_url
+                
+                print(f"      ⚠️  No logo found for non-football event '{event_title}'.")
+                return None
 
         def create_m3u8_playlist(self, matches_data, filename="eventisz.m3u8"):
             """Crea una playlist M3U8 con tutti i match trovati"""
@@ -553,23 +566,25 @@ def eventi_sz():
                     continue
 
                 tvg_logo_attr = ""
-                if match_category == "Motogp": # "Motogp" è come viene generato da .title()
+                if match_category == "Motogp":
                     tvg_logo_attr = f' tvg-logo="{MOTOGP_LOGO_URL}"'
-                elif match_category == "Formula 1": # "Formula 1" è come viene generato da .title()
+                elif match_category == "Formula 1":
                     tvg_logo_attr = f' tvg-logo="{FORMULA1_LOGO_URL}"'
                 elif tvg_logo_path:
-                    # tvg_logo_path is the OS-specific local path, e.g., "logos\hash.png" or "logos/hash.png"
-                    logo_filename = os.path.basename(tvg_logo_path)
-                    if NOMEGITHUB and NOMEREPO:
-                        # Construct GitHub raw URL. Assuming 'main' as the default branch.
-                        # self.logos_dir is "logos".
-                        github_logo_url = f"https://raw.githubusercontent.com/{NOMEGITHUB}/{NOMEREPO}/main/{self.logos_dir}/{logo_filename}"
-                        tvg_logo_attr = f' tvg-logo="{github_logo_url}"'
+                    # Controlla se tvg_logo_path è un URL o un percorso locale
+                    if tvg_logo_path.startswith('http://') or tvg_logo_path.startswith('https://'):
+                        # È un URL diretto (per eventi non calcio)
+                        tvg_logo_attr = f' tvg-logo="{tvg_logo_path}"'
                     else:
-                        # Fallback to relative path, ensuring forward slashes for M3U8
-                        standardized_local_path = tvg_logo_path.replace('\\', '/')
-                        print(f"      ⚠️  NOMEGITHUB o NOMEREPO non impostati nel .env. Uso percorso relativo per il logo: {standardized_local_path}")
-                        tvg_logo_attr = f' tvg-logo="{standardized_local_path}"'
+                        # È un percorso locale (per eventi calcio)
+                        logo_filename = os.path.basename(tvg_logo_path)
+                        if NOMEGITHUB and NOMEREPO:
+                            github_logo_url = f"https://raw.githubusercontent.com/{NOMEGITHUB}/{NOMEREPO}/main/{self.logos_dir}/{logo_filename}"
+                            tvg_logo_attr = f' tvg-logo="{github_logo_url}"'
+                        else:
+                            standardized_local_path = tvg_logo_path.replace('\\', '/')
+                            print(f"      ⚠️  NOMEGITHUB o NOMEREPO non impostati nel .env. Uso percorso relativo per il logo: {standardized_local_path}")
+                            tvg_logo_attr = f' tvg-logo="{standardized_local_path}"'
                 
                 # Dato che abbiamo già verificato la presenza di 'streams', procediamo ad aggiungerli
                 for stream_url in streams:
