@@ -1132,7 +1132,7 @@ def eventi_m3u8_generator_world():
                 search_query = urllib.parse.quote(f"{prefix_name} logo")
                 
                 # Utilizziamo l'API di Bing Image Search con parametri migliorati
-                search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent+filterui:aspect-square&form=IRFLTR"
+                search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent"
                 
                 headers = { 
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
@@ -1175,7 +1175,7 @@ def eventi_m3u8_generator_world():
             search_query = urllib.parse.quote(f"{clean_event_name} logo")
             
             # Utilizziamo l'API di Bing Image Search con parametri migliorati
-            search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent+filterui:aspect-square&form=IRFLTR"
+            search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent"
             
             headers = { 
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
@@ -1247,7 +1247,7 @@ def eventi_m3u8_generator_world():
             search_query = urllib.parse.quote(f"{team_name} logo")
             
             # Utilizziamo l'API di Bing Image Search con parametri migliorati
-            search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent+filterui:aspect-square&form=IRFLTR"
+            search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent"
             
             headers = { 
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
@@ -1768,7 +1768,7 @@ def eventi_m3u8_generator():
                 search_query = urllib.parse.quote(f"{prefix_name} logo")
                 
                 # Utilizziamo l'API di Bing Image Search con parametri migliorati
-                search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent+filterui:aspect-square&form=IRFLTR"
+                search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent"
                 
                 headers = { 
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
@@ -1811,7 +1811,7 @@ def eventi_m3u8_generator():
             search_query = urllib.parse.quote(f"{clean_event_name} logo")
             
             # Utilizziamo l'API di Bing Image Search con parametri migliorati
-            search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent+filterui:aspect-square&form=IRFLTR"
+            search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent"
             
             headers = { 
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
@@ -1883,7 +1883,7 @@ def eventi_m3u8_generator():
             search_query = urllib.parse.quote(f"{team_name} logo")
             
             # Utilizziamo l'API di Bing Image Search con parametri migliorati
-            search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent+filterui:aspect-square&form=IRFLTR"
+            search_url = f"https://www.bing.com/images/search?q={search_query}&qft=+filterui:photo-transparent"
             
             headers = { 
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
