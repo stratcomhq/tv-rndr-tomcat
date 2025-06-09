@@ -572,11 +572,17 @@ def eventi_sz():
                 
                 # Dato che abbiamo già verificato la presenza di 'streams', procediamo ad aggiungerli
                 for stream_url in streams:
-                    # Aggiungi i parametri richiesti agli stream URL e URL-encode User-Agent
-                    if '?' in stream_url:
-                        modified_stream_url = f"{stream_url}&h_user-agent={self.STATIC_USER_AGENT}&h_referer={self.base_url}/&h_origin={self.base_url}"
-                    else:
-                        modified_stream_url = f"{stream_url}&h_user-agent={self.STATIC_USER_AGENT}&h_referer={self.base_url}/&h_origin={self.base_url}"
+                    # Codifica self.base_url per l'uso nei parametri URL, mantenendo ':/'
+                    encoded_base_url_for_param = quote(self.base_url, safe=':/')
+
+                    # Costruisci la stringa dei parametri da aggiungere
+                    params_to_add = f"h_user-agent={self.STATIC_USER_AGENT_ENCODED}&h_referer={encoded_base_url_for_param}%2F&h_origin={encoded_base_url_for_param}"
+
+                    # Aggiungi i parametri all'URL dello stream
+                    if '?' in stream_url: # Se ci sono già parametri, aggiungi con '&'
+                        modified_stream_url = f"{stream_url}&{params_to_add}"
+                    else: # Altrimenti, inizia i parametri con '?'
+                        modified_stream_url = f"{stream_url}?{params_to_add}"
                     
                     clean_title = self._clean_m3u_title(title)
                     playlist_content += f'#EXTINF:-1 group-title="Eventi Live" tvg-name="{clean_title}"{tvg_logo_attr},{clean_title}\n'
@@ -1308,7 +1314,7 @@ def eventi_m3u8_generator_world():
         # channel_id_str is the numeric ID like "121"
         # is_tennis_channel is a boolean flag
         raw_m3u8_url_found = None
-        daddy_headers_str = "&h_User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_Referer=https://alldownplay.xyz/&h_Origin=https://alldownplay.xyz"
+        daddy_headers_str = "&h_User-Agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_Referer=https%3A%2F%2Falldownplay.xyz%2F&h_Origin=https%3A%2F%2Falldownplay.xyz"
 
 
         # Determine if we should use the special tennis URL logic
@@ -1465,10 +1471,7 @@ def eventi_m3u8_generator_world():
             for category, channels in categorized_channels.items(): 
                 if not channels: 
                     continue 
-     
-                # Spacer con nome categoria pulito e group-title "Eventi Live" 
-                f.write(f'#EXTINF:-1 tvg-name="{category}" group-title="Eventi Live",--- {category} ---\nhttps://exemple.m3u8\n\n') 
-     
+          
                 for ch in channels: 
                     tvg_name = ch["tvg_name"] 
                     # channel_id_original = ch["channel_id"] # ID numerico originale, usato per get_stream
@@ -1488,7 +1491,7 @@ def eventi_m3u8_generator_world():
                     try: 
                         stream = get_stream_from_channel_id(ch["channel_id"], is_tennis_channel=is_tennis_event_channel) # Pass the flag
                         if stream: 
-                            f.write(f'#EXTINF:-1 tvg-id="{event_based_tvg_id}" tvg-name="{tvg_name}"{logo_attribute} group-title="Eventi Live",{tvg_name}\n{stream}\n\n') 
+                            f.write(f'#EXTINF:-1 tvg-id="{event_based_tvg_id}" tvg-name="{category} | {tvg_name}"{logo_attribute} group-title="Eventi Live",{category} | {tvg_name}\n{stream}\n\n') 
                             print(f"[✓] {tvg_name}" + (f" (logo trovato)" if logo_url else " (nessun logo trovato)")) 
                         else: 
                             print(f"[✗] {tvg_name} - Nessuno stream trovato") 
@@ -1947,7 +1950,7 @@ def eventi_m3u8_generator():
         # channel_id_str is the numeric ID like "121"
         # is_tennis_channel is a boolean flag
         raw_m3u8_url_found = None
-        daddy_headers_str = "&h_User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_Referer=https://alldownplay.xyz/&h_Origin=https://alldownplay.xyz"
+        daddy_headers_str = "&h_User-Agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_Referer=https%3A%2F%2Falldownplay.xyz%2F&h_Origin=https%3A%2F%2Falldownplay.xyz"
 
 
         # Determine if we should use the special tennis URL logic
@@ -2119,10 +2122,7 @@ def eventi_m3u8_generator():
             for category, channels in categorized_channels.items(): 
                 if not channels: 
                     continue 
-     
-                # Spacer con nome categoria pulito e group-title "Eventi Live" 
-                f.write(f'#EXTINF:-1 tvg-name="{category}" group-title="Eventi Live",--- {category} ---\nhttps://exemple.m3u8\n\n') 
-     
+          
                 for ch in channels: 
                     tvg_name = ch["tvg_name"] 
                     # channel_id_original = ch["channel_id"] # ID numerico originale, usato per get_stream
@@ -2142,7 +2142,7 @@ def eventi_m3u8_generator():
                     try: 
                         stream = get_stream_from_channel_id(ch["channel_id"], is_tennis_channel=is_tennis_event_channel) # Pass the flag
                         if stream: 
-                            f.write(f'#EXTINF:-1 tvg-id="{event_based_tvg_id}" tvg-name="{tvg_name}"{logo_attribute} group-title="Eventi Live",{tvg_name}\n{stream}\n\n') 
+                            f.write(f'#EXTINF:-1 tvg-id="{event_based_tvg_id}" tvg-name="{category} | {tvg_name}"{logo_attribute} group-title="Eventi Live",{category} | {tvg_name}\n{stream}\n\n') 
                             print(f"[✓] {tvg_name}" + (f" (logo trovato)" if logo_url else " (nessun logo trovato)")) 
                         else: 
                             print(f"[✗] {tvg_name} - Nessuno stream trovato") 
@@ -2324,10 +2324,6 @@ def eventi_sps():
         with open(file_path, "w", encoding="utf-8") as f:
             f.write("#EXTM3U\n")
 
-            # Aggiungi il canale iniziale/informativo
-            f.write(f'#EXTINF:-1 tvg-name="SPORTSTREAMING" group-title="Eventi Live",SPORTSTREAMING\n')
-            f.write("https://example.com.m3u8\n\n")
-
             perma_count = 1
 
             for event_url, stream_url, event_time, event_title, league_info in video_streams:
@@ -2363,6 +2359,11 @@ def eventi_sps():
                 final_stream_url = f"{PROXY}{stream_url}&h_user-agent={encoded_ua}&h_referer={encoded_referer}&h_origin={encoded_origin}"
 
                 group_title_text = "Sport" if is_perma else "Eventi Live"
+
+                # Aggiungi il canale iniziale/informativo solo se ci sono eventi da scrivere
+                if f.tell() == len("#EXTM3U\n"): # Controlla se è stata scritta solo l'intestazione iniziale
+                    f.write(f'#EXTINF:-1 tvg-name="SPORTSTREAMING" group-title="Eventi Live",SPORTSTREAMING\n')
+                    f.write("https://example.com.m3u8\n\n")
 
                 f.write(f"#EXTINF:-1 tvg-name=\"{tvg_name_final} (SPS)\"group-title=\"{group_title_text}\" tvg-logo=\"{image_url}\",{tvg_name_final} (SPS)\n")
                 f.write(f"{final_stream_url}\n")
@@ -3245,18 +3246,19 @@ def italy_channels():
         return "Altro"
 
     def get_manual_channels():
+        encoded_link_sz = urllib.parse.quote(LINK_SZ, safe=':/') # Encode LINK_SZ
         return [
-            {"name": "SKY SPORT 251 (SS)", "url": f"https://hls.kangal.icu/hls/sky251/index.m3u8&h_user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_referer={LINK_SZ}/&h_origin={LINK_SZ}", "tvg_id": "sky.sport..251.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
-            {"name": "SKY SPORT 252 (SS)", "url": f"https://hls.kangal.icu/hls/sky252/index.m3u8&h_user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_referer={LINK_SZ}/&h_origin={LINK_SZ}", "tvg_id": "sky.sport..252.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
-            {"name": "SKY SPORT 253 (SS)", "url": f"https://hls.kangal.icu/hls/sky253/index.m3u8&h_user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_referer={LINK_SZ}/&h_origin={LINK_SZ}", "tvg_id": "sky.sport..253.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
-            {"name": "SKY SPORT 254 (SS)", "url": f"https://hls.kangal.icu/hls/sky254/index.m3u8&h_user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_referer={LINK_SZ}/&h_origin={LINK_SZ}", "tvg_id": "sky.sport..254.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
-            {"name": "SKY SPORT 255 (SS)", "url": f"https://hls.kangal.icu/hls/sky255/index.m3u8&h_user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_referer={LINK_SZ}/&h_origin={LINK_SZ}", "tvg_id": "sky.sport..255.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
-            {"name": "SKY SPORT 256 (SS)", "url": f"https://hls.kangal.icu/hls/sky256/index.m3u8&h_user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_referer={LINK_SZ}/&h_origin={LINK_SZ}", "tvg_id": "sky.sport..256.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
-            {"name": "SKY SPORT 257 (SS)", "url": f"https://hls.kangal.icu/hls/sky257/index.m3u8&h_user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_referer={LINK_SZ}/&h_origin={LINK_SZ}", "tvg_id": "sky.sport..257.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
-            {"name": "SKY SPORT 258 (SS)", "url": f"https://hls.kangal.icu/hls/sky258/index.m3u8&h_user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_referer={LINK_SZ}/&h_origin={LINK_SZ}", "tvg_id": "sky.sport..258.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
-            {"name": "SKY SPORT 259 (SS)", "url": f"https://hls.kangal.icu/hls/sky259/index.m3u8&h_user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_referer={LINK_SZ}/&h_origin={LINK_SZ}", "tvg_id": "sky.sport..259.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
-            {"name": "SKY SPORT 260 (SS)", "url": f"https://hls.kangal.icu/hls/sky260/index.m3u8&h_user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_referer={LINK_SZ}/&h_origin={LINK_SZ}", "tvg_id": "sky.sport..260.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
-            {"name": "SKY SPORT 261 (SS)", "url": f"https://hls.kangal.icu/hls/sky261/index.m3u8&h_user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_referer={LINK_SZ}/&h_origin={LINK_SZ}", "tvg_id": "sky.sport..261.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
+            {"name": "SKY SPORT 251 (SS)", "url": f"https://hls.kangal.icu/hls/sky251/index.m3u8&h_user-agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_referer={encoded_link_sz}%2F&h_origin={encoded_link_sz}", "tvg_id": "sky.sport..251.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
+            {"name": "SKY SPORT 252 (SS)", "url": f"https://hls.kangal.icu/hls/sky252/index.m3u8&h_user-agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_referer={encoded_link_sz}%2F&h_origin={encoded_link_sz}", "tvg_id": "sky.sport..252.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
+            {"name": "SKY SPORT 253 (SS)", "url": f"https://hls.kangal.icu/hls/sky253/index.m3u8&h_user-agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_referer={encoded_link_sz}%2F&h_origin={encoded_link_sz}", "tvg_id": "sky.sport..253.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
+            {"name": "SKY SPORT 254 (SS)", "url": f"https://hls.kangal.icu/hls/sky254/index.m3u8&h_user-agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_referer={encoded_link_sz}%2F&h_origin={encoded_link_sz}", "tvg_id": "sky.sport..254.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
+            {"name": "SKY SPORT 255 (SS)", "url": f"https://hls.kangal.icu/hls/sky255/index.m3u8&h_user-agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_referer={encoded_link_sz}%2F&h_origin={encoded_link_sz}", "tvg_id": "sky.sport..255.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
+            {"name": "SKY SPORT 256 (SS)", "url": f"https://hls.kangal.icu/hls/sky256/index.m3u8&h_user-agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_referer={encoded_link_sz}%2F&h_origin={encoded_link_sz}", "tvg_id": "sky.sport..256.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
+            {"name": "SKY SPORT 257 (SS)", "url": f"https://hls.kangal.icu/hls/sky257/index.m3u8&h_user-agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_referer={encoded_link_sz}%2F&h_origin={encoded_link_sz}", "tvg_id": "sky.sport..257.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
+            {"name": "SKY SPORT 258 (SS)", "url": f"https://hls.kangal.icu/hls/sky258/index.m3u8&h_user-agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_referer={encoded_link_sz}%2F&h_origin={encoded_link_sz}", "tvg_id": "sky.sport..258.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
+            {"name": "SKY SPORT 259 (SS)", "url": f"https://hls.kangal.icu/hls/sky259/index.m3u8&h_user-agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_referer={encoded_link_sz}%2F&h_origin={encoded_link_sz}", "tvg_id": "sky.sport..259.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
+            {"name": "SKY SPORT 260 (SS)", "url": f"https://hls.kangal.icu/hls/sky260/index.m3u8&h_user-agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_referer={encoded_link_sz}%2F&h_origin={encoded_link_sz}", "tvg_id": "sky.sport..260.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
+            {"name": "SKY SPORT 261 (SS)", "url": f"https://hls.kangal.icu/hls/sky261/index.m3u8&h_user-agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_referer={encoded_link_sz}%2F&h_origin={encoded_link_sz}", "tvg_id": "sky.sport..261.it", "logo": "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png", "category": "Sport"},
         ]
 
     # --- Funzioni per risolvere gli stream Daddylive ---
@@ -3383,8 +3385,8 @@ def italy_channels():
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             f.write('#EXTM3U\n\n')
 
-            vavoo_headers_str = "&h_User-Agent=VAVOO2/6&h_Referer=https://vavoo.to/&h_Origin=https://vavoo.to"
-            daddy_headers_str = "&h_User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36&h_Referer=https://alldownplay.xyz/&h_Origin=https://alldownplay.xyz"
+            vavoo_headers_str = "&h_User-Agent=VAVOO2%2F6&h_Referer=https%3A%2F%2Fvavoo.to%2F&h_Origin=https%3A%2F%2Fvavoo.to"
+            daddy_headers_str = "&h_User-Agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_Referer=https%3A%2F%2Falldownplay.xyz%2F&h_Origin=https%3A%2F%2Falldownplay.xyz"
 
             for category, channels_list in organized_channels.items():
                 channels_list.sort(key=lambda x: x["name"].lower())
@@ -3601,8 +3603,8 @@ def world_channels_generator():
         # Ordina le categorie alfabeticamente e i canali dentro ogni categoria
         sorted_categories = sorted(grouped_channels.keys())
     
-        vavoo_headers_str = "&h_User-Agent=VAVOO2/6&h_Referer=https://vavoo.to/&h_Origin=https://vavoo.to"
-
+        vavoo_headers_str = "&h_User-Agent=VAVOO2%2F6&h_Referer=https%3A%2F%2Fvavoo.to%2F&h_Origin=https%3A%2F%2Fvavoo.to"
+            
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             f.write('#EXTM3U\n\n')
     
