@@ -1390,7 +1390,7 @@ https://nzo66-tvproxy.hf.space/proxy/m3u?url=https://vavoo.to/play/2989824407/in
 #EXTINF:-1 tvg-name="DADDYLIVE" group-title="Eventi Live",DADDYLIVE
 https://example.com.m3u8
 
-#EXTINF:-1 tvg-id="worldcupqualifyingitalyvsmoldova" tvg-name="Soccer | World Cup Qualifying : Italy vs Moldova (20:45)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Italy_vs_Moldova.png" group-title="Eventi Live",Soccer | World Cup Qualifying : Italy vs Moldova (20:45)
+#EXTINF:-1 tvg-id="worldcupqualifyingitalyvsmoldova" tvg-name="Soccer | World Cup Qualifying : Italy vs Moldova (20:45)" tvg-logo="https://download.logo.wine/logo/Orange_Moldova/Orange_Moldova-Logo.wine.png" group-title="Eventi Live",Soccer | World Cup Qualifying : Italy vs Moldova (20:45)
 https://nzo66-tvproxy.hf.space/proxy/m3u?url=https://new.newkso.ru/ddy6/premium850/mono.m3u8&h_User-Agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_Referer=https%3A%2F%2Falldownplay.xyz%2F&h_Origin=https%3A%2F%2Falldownplay.xyz
 
 #EXTINF:-1 tvg-id="legabasketserieavirtoysmpoloniavsarmanimilano" tvg-name="Basketball | Lega Basket Serie A : Virtoys Mpolonia vs Armani Milano (20:45)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Virtoys Mpolonia_vs_Armani Milano.png" group-title="Eventi Live",Basketball | Lega Basket Serie A : Virtoys Mpolonia vs Armani Milano (20:45)
