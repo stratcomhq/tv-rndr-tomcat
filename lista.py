@@ -1329,7 +1329,7 @@ def eventi_m3u8_generator_world():
         # channel_id_str is the numeric ID like "121"
         # is_tennis_channel is a boolean flag
         raw_m3u8_url_found = None
-        daddy_headers_str = "&h_User-Agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_Referer=https%3A%2F%2Falldownplay.xyz%2F&h_Origin=https%3A%2F%2Falldownplay.xyz"
+        daddy_headers_str = "&h_User-Agent=Mozilla%2F5.0%20%28iPhone%3B%20CPU%20iPhone%20OS%2017_7%20like%20Mac%20OS%20X%29%20AppleWebKit%2F605.1.15%20%28KHTML%2C%20like%20Gecko%29%20Version%2F18.0%20Mobile%2F15E148%20Safari%2F604.1&h_Referer=https%3A%2F%2Fpkpakiplay.xyz%2F&h_Origin=https%3A%2F%2Fpkpakiplay.xyz"
 
 
         # Determine if we should use the special tennis URL logic
@@ -1965,7 +1965,7 @@ def eventi_m3u8_generator():
         # channel_id_str is the numeric ID like "121"
         # is_tennis_channel is a boolean flag
         raw_m3u8_url_found = None
-        daddy_headers_str = "&h_User-Agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_Referer=https%3A%2F%2Falldownplay.xyz%2F&h_Origin=https%3A%2F%2Falldownplay.xyz"
+        daddy_headers_str = "&h_User-Agent=Mozilla%2F5.0%20%28iPhone%3B%20CPU%20iPhone%20OS%2017_7%20like%20Mac%20OS%20X%29%20AppleWebKit%2F605.1.15%20%28KHTML%2C%20like%20Gecko%29%20Version%2F18.0%20Mobile%2F15E148%20Safari%2F604.1&h_Referer=https%3A%2F%2Fpkpakiplay.xyz%2F&h_Origin=https%3A%2F%2Fpkpakiplay.xyz"
 
 
         # Determine if we should use the special tennis URL logic
@@ -3401,7 +3401,7 @@ def italy_channels():
             f.write('#EXTM3U\n\n')
 
             vavoo_headers_str = "&h_User-Agent=VAVOO2%2F6&h_Referer=https%3A%2F%2Fvavoo.to%2F&h_Origin=https%3A%2F%2Fvavoo.to"
-            daddy_headers_str = "&h_User-Agent=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F133.0.0.0%20Safari%2F537.36&h_Referer=https%3A%2F%2Falldownplay.xyz%2F&h_Origin=https%3A%2F%2Falldownplay.xyz"
+            daddy_headers_str = "&h_User-Agent=Mozilla%2F5.0%20%28iPhone%3B%20CPU%20iPhone%20OS%2017_7%20like%20Mac%20OS%20X%29%20AppleWebKit%2F605.1.15%20%28KHTML%2C%20like%20Gecko%29%20Version%2F18.0%20Mobile%2F15E148%20Safari%2F604.1&h_Referer=https%3A%2F%2Fpkpakiplay.xyz%2F&h_Origin=https%3A%2F%2Fpkpakiplay.xyz"
 
             for category, channels_list in organized_channels.items():
                 channels_list.sort(key=lambda x: x["name"].lower())
