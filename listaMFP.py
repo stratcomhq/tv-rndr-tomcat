@@ -1366,7 +1366,10 @@ def eventi_m3u8_generator_world():
                 continue
      
             for category_raw, event_items in sections.items(): 
-                category = clean_category_name(category_raw) 
+                category = clean_category_name(category_raw)
+                # Salta la categoria TV Shows
+                if category.lower() == "tv shows":
+                    continue
                 if category not in categorized_channels: 
                     categorized_channels[category] = [] 
      
@@ -1938,7 +1941,10 @@ def eventi_m3u8_generator():
             date_str = date_obj.strftime("%Y-%m-%d") 
      
             for category_raw, event_items in sections.items(): 
-                category = clean_category_name(category_raw) 
+                category = clean_category_name(category_raw)
+                # Salta la categoria TV Shows
+                if category.lower() == "tv shows":
+                    continue
                 if category not in categorized_channels: 
                     categorized_channels[category] = [] 
      
