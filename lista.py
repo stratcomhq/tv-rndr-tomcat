@@ -1428,6 +1428,8 @@ def eventi_m3u8_generator_world():
      
             for category_raw, event_items in sections.items(): 
                 category = clean_category_name(category_raw) 
+                if category.lower() == "tv shows":
+                    continue
                 if category not in categorized_channels: 
                     categorized_channels[category] = [] 
      
