@@ -603,7 +603,7 @@ def eventi_sz():
                     clean_title = self._clean_m3u_title(title)
                     playlist_content += f'#EXTINF:-1 group-title="Eventi Live" tvg-name="{clean_title}"{tvg_logo_attr},{clean_title}\n'
                     if MFP_IP and MFP_PASSWORD:
-                        playlist_content += f'{MFP_IP.rstrip('/')}/proxy/hls/manifest.m3u8?api_password={MFP_PASSWORD}&d={modified_stream_url}\n'
+                        playlist_content += f"{MFP_IP.rstrip('/')}/proxy/hls/manifest.m3u8?api_password={MFP_PASSWORD}&d={modified_stream_url}\n"
                     else:
                         playlist_content += f'{modified_stream_url}\n'
 
