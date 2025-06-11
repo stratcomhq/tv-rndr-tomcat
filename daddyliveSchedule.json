@@ -4320,6 +4320,194 @@
                 ]
             }
         ],
+        "ATP - HERTOGENBOSCH</span>": [
+            {
+                "time": "09:00",
+                "event": "ATP - HERTOGENBOSCH : Thompson J. vs Diallo G.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 7",
+                        "channel_id": "1507"
+                    }
+                ]
+            },
+            {
+                "time": "10:30",
+                "event": "ATP - HERTOGENBOSCH : Bautista-Agut R. vs Hurkacz H.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 7",
+                        "channel_id": "1507"
+                    }
+                ]
+            },
+            {
+                "time": "12:00",
+                "event": "ATP - HERTOGENBOSCH : McDonald M. vs Khachanov K.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 7",
+                        "channel_id": "1507"
+                    }
+                ]
+            },
+            {
+                "time": "14:00",
+                "event": "ATP - HERTOGENBOSCH : Djere L. vs Lajal M.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 7",
+                        "channel_id": "1507"
+                    }
+                ]
+            }
+        ],
+        "ATP - STUTTGART</span>": [
+            {
+                "time": "09:00",
+                "event": "ATP - STUTTGART : Rinderknech A. vs Fucsovics M.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 8",
+                        "channel_id": "1508"
+                    }
+                ]
+            },
+            {
+                "time": "10:30",
+                "event": "ATP - STUTTGART : Shelton B. vs Herbert P.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 8",
+                        "channel_id": "1508"
+                    }
+                ]
+            },
+            {
+                "time": "13:00",
+                "event": "ATP - STUTTGART : Halys Q. vs Fritz T.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 8",
+                        "channel_id": "1508"
+                    }
+                ]
+            },
+            {
+                "time": "15:00",
+                "event": "ATP - STUTTGART : Struff J-L. vs Lehecka J.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 8",
+                        "channel_id": "1508"
+                    }
+                ]
+            }
+        ],
+        "WTA - HERTOGENBOSCH</span>": [
+            {
+                "time": "09:00",
+                "event": "WTA - HERTOGENBOSCH : Koevermans A. vs Sakkari M.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 3",
+                        "channel_id": "1503"
+                    }
+                ]
+            },
+            {
+                "time": "09:00",
+                "event": "WTA - HERTOGENBOSCH : Van den Broek I. L. vs Ruse G.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 4",
+                        "channel_id": "1504"
+                    }
+                ]
+            },
+            {
+                "time": "10:30",
+                "event": "WTA - HERTOGENBOSCH : Pera B. vs Cocciaretto E.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 3",
+                        "channel_id": "1503"
+                    }
+                ]
+            },
+            {
+                "time": "10:30",
+                "event": "WTA - HERTOGENBOSCH : Samsonova L. vs Branstine C.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 4",
+                        "channel_id": "1504"
+                    }
+                ]
+            },
+            {
+                "time": "12:00",
+                "event": "WTA - HERTOGENBOSCH : Blinkova A. vs Alexandrova E.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 3",
+                        "channel_id": "1503"
+                    }
+                ]
+            },
+            {
+                "time": "14:00",
+                "event": "WTA - HERTOGENBOSCH : Kudermetova V. vs Minnen G.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 5",
+                        "channel_id": "1505"
+                    }
+                ]
+            }
+        ],
+        "WTA - LONDON</span>": [
+            {
+                "time": "12:00",
+                "event": "WTA - LONDON : Navarro E. vs Haddad Maia B.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 1",
+                        "channel_id": "1501"
+                    }
+                ]
+            },
+            {
+                "time": "13:00",
+                "event": "WTA - LONDON : Muchova K. vs Maria T.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 2",
+                        "channel_id": "1502"
+                    }
+                ]
+            },
+            {
+                "time": "13:30",
+                "event": "WTA - LONDON : Kartal S. vs Anisimova A.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 1",
+                        "channel_id": "1501"
+                    }
+                ]
+            },
+            {
+                "time": "15:00",
+                "event": "WTA - LONDON : Zakharova A. vs Keys M.",
+                "channels": [
+                    {
+                        "channel_name": "Tennis Stream 1",
+                        "channel_id": "1501"
+                    }
+                ]
+            }
+        ],
         "Tennis</span>": [
             {
                 "time": "09:00",
