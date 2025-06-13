@@ -58,14 +58,12 @@ Con OMG Premium TV potrai sfruttare:
 
 - **Proxy mio**:
   [tvproxy (repo GitHub)](https://github.com/nzo66/tvproxy)
-
   `usando questo proxy hai la possibilita' di installarlo su un qualsiasi dispositivo android grazie all'app Termux`
 
 - **Mediaflow Proxy**:  
   [mediaflow-proxy](https://github.com/mhdzumair/mediaflow-proxy)
-
+  
 - **Mediaflow Proxy Per HuggingFace** 
-
   `(i canali non sempre funzionano su HuggingFace)`
 
   Usa questa repo ottimizzata: [hfmfp](https://github.com/nzo66/hfmfp)
