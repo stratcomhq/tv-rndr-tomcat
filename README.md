@@ -97,7 +97,7 @@ Questo ti permetterà di servire la lista M3U attraverso il tuo proxy personale 
 
 ### 🔁 Come proxare la lista completa?
 
-Utilizza il seguente URL: `https://nzo66-mfpform3u.hf.space/proxy?<server-ip>:<password>?url=<url-lista>`
+Utilizza il seguente URL: `https://nzo66-mfpform3u.hf.space/proxy?<server-ip>:<password>&<url-lista>`
 
 questo sara il link della tua lista da mettere nelle app iptv!
 
