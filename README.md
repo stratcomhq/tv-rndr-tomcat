@@ -17,9 +17,9 @@ Benvenuto nella tua **lista IPTV personalizzata** con **EPG** integrata e suppor
 
 ---
 
-## 🔗 Link pronti all'uso
+## 🔗 Link Lista + EPG
 
-Queste liste utilizzano un proxy ospitato su **HuggingFace Spaces**.
+Queste liste devono essere utilizzate con un proxy.
 
 - **Lista M3U**  
   [`https://raw.githubusercontent.com/nzo66/TV/refs/heads/main/lista.m3u`](https://raw.githubusercontent.com/nzo66/TV/refs/heads/main/lista.m3u)
@@ -38,7 +38,7 @@ Per utilizzare questa lista IPTV su Stremio, dovrai usare l'addon **OMG Premium 
 1. **Usa questo fork specifico**: [https://github.com/nzo66/OMG-Premium-TV](https://github.com/nzo66/OMG-Premium-TV)  
 2. **Deploy su Docker** tramite Hugging Face o VPS seguendo la guida nel repository  
 3. **Configura l'addon** inserendo:
-   - **URL M3U**: Il link della lista M3U sopra indicato  
+   - **URL M3U**: Il link della lista M3U sopra indicato con il proxy prima dell' url della Lista 
    - **URL EPG**: Il link dell'EPG XML sopra indicato  
 4. **Installa su Stremio** cliccando sul pulsante "INSTALLA SU STREMIO"
 
@@ -54,41 +54,33 @@ Con OMG Premium TV potrai sfruttare:
 
 ---
 
-## 🧩 Proxy: come funziona
-
-Se il proxy fornito non dovesse funzionare o preferisci crearne uno tuo, puoi farlo facilmente.
-
 ### ✅ Crea il tuo proxy personalizzato
 
-- **Proxy base consigliato**:
+- **Proxy mio**:
   [tvproxy (repo GitHub)](https://github.com/nzo66/tvproxy)
 
   `usando questo proxy hai la possibilita' di installarlo su un qualsiasi dispositivo android grazie all'app Termux`
 
-- **Proxy alternativo**:  
+- **Mediaflow Proxy**:  
   [mediaflow-proxy](https://github.com/mhdzumair/mediaflow-proxy)
 
-- **Per HuggingFace**  
+- **Mediaflow Proxy Per HuggingFace** 
+
+  (i canali non sempre funzionano su HuggingFace)
+
   Usa questa repo ottimizzata: [hfmfp](https://github.com/nzo66/hfmfp)
 
 ---
 
-## ⚙️ Personalizza la lista
+## ⚙️ Vuoi Personalizzare la lista
 
 ### 1. Fai il fork della repo
 
 Avvia creando un fork della repository proxy.
 
-### 2. Modifica il file `.env` ed inserisci i tuoi dati.
+### 2. Modifica il file `.env`.
 
 ---
-
-## 🔒 Proxy sicuro con tvproxy
-
-Se utilizzi **tvproxy**, hai la possibilità di lasciare il campo `PROXYIP` vuoto nel file `.env` e proxare direttamente la lista per una maggiore sicurezza.
-
-📘 **Per maggiori informazioni, consulta il repo:**  
-👉 [https://github.com/nzo66/tvproxy](https://github.com/nzo66/tvproxy)
 
 ### 🔁 Come proxare la lista completa?
 
@@ -104,10 +96,6 @@ Sostituisci:
 Questo ti permetterà di servire la lista M3U attraverso il tuo proxy personale in modo sicuro e performante.
 
 ---
-
-## 🔒 Proxy sicuro con mediaflow-proxy
-
-Se utilizzi **mediaflow-proxy**, hai la possibilità di lasciare il campo `PROXYIP` vuoto nel file `.env` e proxare direttamente la lista per una maggiore sicurezza.
 
 ### 🔁 Come proxare la lista completa?
 
