@@ -66,7 +66,7 @@ Con OMG Premium TV potrai sfruttare:
 
 - **Mediaflow Proxy Per HuggingFace** 
 
-  (i canali non sempre funzionano su HuggingFace)
+  `(i canali non sempre funzionano su HuggingFace)`
 
   Usa questa repo ottimizzata: [hfmfp](https://github.com/nzo66/hfmfp)
 
