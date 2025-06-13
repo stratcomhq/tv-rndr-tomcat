@@ -56,14 +56,11 @@ Con OMG Premium TV potrai sfruttare:
 
 ### ✅ Crea il tuo proxy personalizzato
 
-- **Proxy mio**:
-  [tvproxy (repo GitHub)](https://github.com/nzo66/tvproxy)
-  `usando questo proxy hai la possibilita' di installarlo su un qualsiasi dispositivo android grazie all'app Termux`
-
 - **Mediaflow Proxy**:  
   [mediaflow-proxy](https://github.com/mhdzumair/mediaflow-proxy)
   
-- **Mediaflow Proxy Per HuggingFace** 
+- **Mediaflow Proxy Per HuggingFace**
+  
   `(i canali non sempre funzionano su HuggingFace)`
 
   Usa questa repo ottimizzata: [hfmfp](https://github.com/nzo66/hfmfp)
@@ -77,21 +74,6 @@ Con OMG Premium TV potrai sfruttare:
 Avvia creando un fork della repository proxy.
 
 ### 2. Modifica il file `.env`.
-
----
-
-### 🔁 Come proxare la lista completa?
-
-Utilizza il seguente URL: `<server-ip>/proxy?url=<URL_LISTA_M3U>`
-
-questo sara il link della tua lista da mettere nelle app iptv!
-
-Sostituisci:
-
-- `<server-ip>` con l'indirizzo IP del tuo server  
-- `<URL_LISTA_M3U>` con l'URL effettivo della tua lista M3U (es. quello GitHub)
-
-Questo ti permetterà di servire la lista M3U attraverso il tuo proxy personale in modo sicuro e performante.
 
 ---
 
