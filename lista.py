@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
-
 def merger_playlist():
     # Codice del primo script qui
     # Aggiungi il codice del tuo script "merger_playlist.py" in questa funzione.
@@ -178,7 +177,7 @@ def epg_merger():
                 with gzip.open(io.BytesIO(response.content), 'rb') as f_in:
                     xml_content = f_in.read()
             except (gzip.BadGzipFile, OSError):
-                # Non è un file gzip, usa direttamente il contenuto
+                # Non Ã¨ un file gzip, usa direttamente il contenuto
                 xml_content = response.content
 
             return ET.ElementTree(ET.fromstring(xml_content))
@@ -287,9 +286,9 @@ def eventi_m3u8_generator_world():
         """
         Pulisce il tvg-id rimuovendo caratteri speciali, spazi e convertendo tutto in minuscolo
         """
-        # import re # 're' è già importato a livello di funzione
+        # import re # 're' Ã¨ giÃ  importato a livello di funzione
         # Rimuove caratteri speciali comuni mantenendo solo lettere e numeri
-        cleaned = re.sub(r'[^a-zA-Z0-9Ã-Ã¿]', '', tvg_id)
+        cleaned = re.sub(r'[^a-zA-Z0-9ÃÂ-ÃÂ¿]', '', tvg_id)
         return cleaned.lower()
      
     def search_logo_for_event(event_name): 
@@ -301,7 +300,7 @@ def eventi_m3u8_generator_world():
             # Rimuovi eventuali riferimenti all'orario dal nome dell'evento
             # Cerca pattern come "Team A vs Team B (20:00)" e rimuovi la parte dell'orario
             clean_event_name = re.sub(r'\s*\(\d{1,2}:\d{2}\)\s*$', '', event_name)
-            # Se c'Ã¨ un ':', prendi solo la parte dopo
+            # Se c'ÃÂ¨ un ':', prendi solo la parte dopo
             if ':' in clean_event_name:
                 clean_event_name = clean_event_name.split(':', 1)[1].strip()
             
@@ -321,10 +320,10 @@ def eventi_m3u8_generator_world():
                 team1 = teams[0].strip()
                 team2 = teams[1].strip()
                 
-                print(f"[🔍] Ricerca logo per Team 1: {team1}")
+                print(f"[ð] Ricerca logo per Team 1: {team1}")
                 logo1_url = search_team_logo(team1)
                 
-                print(f"[🔍] Ricerca logo per Team 2: {team2}")
+                print(f"[ð] Ricerca logo per Team 2: {team2}")
                 logo2_url = search_team_logo(team2)
                 
                 # Se abbiamo trovato entrambi i loghi, creiamo un'immagine combinata
@@ -337,12 +336,12 @@ def eventi_m3u8_generator_world():
                         logos_dir = "logos"
                         os.makedirs(logos_dir, exist_ok=True)
                         
-                        # Verifica se l'immagine combinata esiste giÃ  e non Ã¨ obsoleta
+                        # Verifica se l'immagine combinata esiste giÃÂ  e non ÃÂ¨ obsoleta
                         output_filename = f"logos/{team1}_vs_{team2}.png"
                         if exists(output_filename):
                             file_age = current_time - os.path.getmtime(output_filename)
                             if file_age <= three_hours_in_seconds:
-                                print(f"[✓] Utilizzo immagine combinata esistente: {output_filename}")
+                                print(f"[â] Utilizzo immagine combinata esistente: {output_filename}")
                                 
                                 # Carica le variabili d'ambiente per GitHub
                                 NOMEREPO = os.getenv("NOMEREPO", "").strip()
@@ -351,7 +350,7 @@ def eventi_m3u8_generator_world():
                                 # Se le variabili GitHub sono disponibili, restituisci l'URL raw di GitHub
                                 if NOMEGITHUB and NOMEREPO:
                                     github_raw_url = f"https://raw.githubusercontent.com/{NOMEGITHUB}/{NOMEREPO}/main/{output_filename}"
-                                    print(f"[✓] URL GitHub generato per logo esistente: {github_raw_url}")
+                                    print(f"[â] URL GitHub generato per logo esistente: {github_raw_url}")
                                     return github_raw_url
                                 else:
                                     # Altrimenti restituisci il percorso locale
@@ -370,10 +369,10 @@ def eventi_m3u8_generator_world():
                                 response1.raise_for_status() # Controlla errori HTTP
                                 if 'image' in response1.headers.get('Content-Type', '').lower():
                                     img1 = Image.open(io.BytesIO(response1.content))
-                                    print(f"[✓] Logo1 scaricato con successo da: {logo1_url}")
+                                    print(f"[â] Logo1 scaricato con successo da: {logo1_url}")
                                 else:
-                                    print(f"[!] URL logo1 ({logo1_url}) non è un'immagine (Content-Type: {response1.headers.get('Content-Type')}).")
-                                    logo1_url = None # Invalida URL se non è un'immagine
+                                    print(f"[!] URL logo1 ({logo1_url}) non Ã¨ un'immagine (Content-Type: {response1.headers.get('Content-Type')}).")
+                                    logo1_url = None # Invalida URL se non Ã¨ un'immagine
                             except requests.exceptions.RequestException as e_req:
                                 print(f"[!] Errore scaricando logo1 ({logo1_url}): {e_req}")
                                 logo1_url = None
@@ -391,10 +390,10 @@ def eventi_m3u8_generator_world():
                                 response2.raise_for_status() # Controlla errori HTTP
                                 if 'image' in response2.headers.get('Content-Type', '').lower():
                                     img2 = Image.open(io.BytesIO(response2.content))
-                                    print(f"[✓] Logo2 scaricato con successo da: {logo2_url}")
+                                    print(f"[â] Logo2 scaricato con successo da: {logo2_url}")
                                 else:
-                                    print(f"[!] URL logo2 ({logo2_url}) non è un'immagine (Content-Type: {response2.headers.get('Content-Type')}).")
-                                    logo2_url = None # Invalida URL se non è un'immagine
+                                    print(f"[!] URL logo2 ({logo2_url}) non Ã¨ un'immagine (Content-Type: {response2.headers.get('Content-Type')}).")
+                                    logo2_url = None # Invalida URL se non Ã¨ un'immagine
                             except requests.exceptions.RequestException as e_req:
                                 print(f"[!] Errore scaricando logo2 ({logo2_url}): {e_req}")
                                 logo2_url = None
@@ -406,7 +405,7 @@ def eventi_m3u8_generator_world():
                         vs_path = "vs.png"
                         if exists(vs_path):
                             img_vs = Image.open(vs_path)
-                            # Converti l'immagine VS in modalitÃ  RGBA se non lo Ã¨ giÃ 
+                            # Converti l'immagine VS in modalitÃÂ  RGBA se non lo ÃÂ¨ giÃÂ 
                             if img_vs.mode != 'RGBA':
                                 img_vs = img_vs.convert('RGBA')
                         else:
@@ -423,7 +422,7 @@ def eventi_m3u8_generator_world():
                         # Procedi con la combinazione solo se entrambi i loghi sono stati caricati con successo
                         if not (img1 and img2):
                             print(f"[!] Impossibile caricare entrambi i loghi come immagini valide per la combinazione. Logo1 caricato: {bool(img1)}, Logo2 caricato: {bool(img2)}.")
-                            raise ValueError("Uno o entrambi i loghi non sono stati caricati correttamente.") # Questo forzerà l'except sottostante
+                            raise ValueError("Uno o entrambi i loghi non sono stati caricati correttamente.") # Questo forzerÃ  l'except sottostante
                         
                         # Ridimensiona le immagini a dimensioni uniformi
                         size = (150, 150)
@@ -431,7 +430,7 @@ def eventi_m3u8_generator_world():
                         img2 = img2.resize(size)
                         img_vs = img_vs.resize((100, 100))
                         
-                        # Assicurati che tutte le immagini siano in modalitÃ  RGBA per supportare la trasparenza
+                        # Assicurati che tutte le immagini siano in modalitÃÂ  RGBA per supportare la trasparenza
                         if img1.mode != 'RGBA':
                             img1 = img1.convert('RGBA')
                         if img2.mode != 'RGBA':
@@ -451,7 +450,7 @@ def eventi_m3u8_generator_world():
                         vs_x = (combined_width - 100) // 2
                         
                         # Crea una copia dell'immagine combinata prima di sovrapporre il VS
-                        # Questo passaggio Ã¨ importante per preservare i dettagli dei loghi sottostanti
+                        # Questo passaggio ÃÂ¨ importante per preservare i dettagli dei loghi sottostanti
                         combined_with_vs = combined.copy()
                         combined_with_vs.paste(img_vs, (vs_x, 25), img_vs)
                         
@@ -462,7 +461,7 @@ def eventi_m3u8_generator_world():
                         os.makedirs(os.path.dirname(output_filename), exist_ok=True)
                         combined.save(output_filename)
                         
-                        print(f"[✓] Immagine combinata creata: {output_filename}")
+                        print(f"[â] Immagine combinata creata: {output_filename}")
                         
                         # Carica le variabili d'ambiente per GitHub
                         NOMEREPO = os.getenv("NOMEREPO", "").strip()
@@ -471,7 +470,7 @@ def eventi_m3u8_generator_world():
                         # Se le variabili GitHub sono disponibili, restituisci l'URL raw di GitHub
                         if NOMEGITHUB and NOMEREPO:
                             github_raw_url = f"https://raw.githubusercontent.com/{NOMEGITHUB}/{NOMEREPO}/main/{output_filename}"
-                            print(f"[✓] URL GitHub generato: {github_raw_url}")
+                            print(f"[â] URL GitHub generato: {github_raw_url}")
                             return github_raw_url
                         else:
                             # Altrimenti restituisci il percorso locale
@@ -487,7 +486,7 @@ def eventi_m3u8_generator_world():
             if ':' in event_name:
                 # Usa la parte prima dei ":" per la ricerca
                 prefix_name = event_name.split(':', 1)[0].strip()
-                print(f"[🔍] Tentativo ricerca logo con prefisso: {prefix_name}")
+                print(f"[ð] Tentativo ricerca logo con prefisso: {prefix_name}")
                 
                 # Prepara la query di ricerca con il prefisso
                 search_query = urllib.parse.quote(f"{prefix_name} logo")
@@ -521,18 +520,18 @@ def eventi_m3u8_generator_world():
                             # Prendi il primo risultato che sembra un logo (preferibilmente PNG o SVG)
                             for match in matches:
                                 if '.png' in match.lower() or '.svg' in match.lower():
-                                    print(f"[✓] Logo trovato con prefisso: {match}")
+                                    print(f"[â] Logo trovato con prefisso: {match}")
                                     return match
                             # Se non troviamo PNG o SVG, prendi il primo risultato
-                            print(f"[✓] Logo trovato con prefisso: {matches[0]}")
+                            print(f"[â] Logo trovato con prefisso: {matches[0]}")
                             return matches[0]
             
             # Se non riusciamo a identificare le squadre e il prefisso non ha dato risultati, procedi con la ricerca normale
-            print(f"[🔍] Ricerca standard per: {clean_event_name}")
+            print(f"[ð] Ricerca standard per: {clean_event_name}")
             
             
             # Se non riusciamo a identificare le squadre, procedi con la ricerca normale
-            # Prepara la query di ricerca piÃ¹ specifica
+            # Prepara la query di ricerca piÃÂ¹ specifica
             search_query = urllib.parse.quote(f"{clean_event_name} logo")
             
             # Utilizziamo l'API di Bing Image Search con parametri migliorati
@@ -715,7 +714,7 @@ def eventi_m3u8_generator_world():
                 process_this_date = True
                 is_yesterday_early_morning_event_check = True # Flag per eventi di ieri mattina presto
             else:
-                # Salta date che non sono né oggi né ieri
+                # Salta date che non sono nÃ© oggi nÃ© ieri
                 continue
 
             if not process_this_date:
@@ -739,7 +738,7 @@ def eventi_m3u8_generator_world():
 
                         # Costruisci datetime completo dell'evento con la sua data originale
                         # e l'orario originale, poi applica il timedelta(hours=2) (per "correzione timezone?")
-                        # Questo event_datetime_adjusted è quello che viene usato per il filtro "meno di 2 ore fa" per oggi
+                        # Questo event_datetime_adjusted Ã¨ quello che viene usato per il filtro "meno di 2 ore fa" per oggi
                         # e per il nome del canale.
                         event_datetime_adjusted_for_display_and_filter = datetime.combine(date_obj, original_event_time_obj) + timedelta(hours=2)
 
@@ -752,10 +751,10 @@ def eventi_m3u8_generator_world():
                                 # Evento di ieri, ma non nell'intervallo 00:00-04:00 -> salto
                                 continue
                         else: # Eventi di oggi
-                            # Controllo: includi solo se l'evento è iniziato da meno di 2 ore
-                            # Usa event_datetime_adjusted_for_display_and_filter che ha già il +2h
+                            # Controllo: includi solo se l'evento Ã¨ iniziato da meno di 2 ore
+                            # Usa event_datetime_adjusted_for_display_and_filter che ha giÃ  il +2h
                             if now - event_datetime_adjusted_for_display_and_filter > timedelta(hours=2):
-                                # Evento di oggi iniziato da più di 2 ore -> salto
+                                # Evento di oggi iniziato da piÃ¹ di 2 ore -> salto
                                 continue
                         
                         time_formatted = event_datetime_adjusted_for_display_and_filter.strftime("%H:%M")
@@ -793,7 +792,7 @@ def eventi_m3u8_generator_world():
                 f.write(f'#EXTINF:-1 tvg-name="DADDYLIVE" group-title="Eventi Live",DADDYLIVE\n')
                 f.write("https://example.com.m3u8\n\n")
             else:
-                print("[ℹ️] Nessun evento trovato, canale DADDYLIVE non aggiunto.")
+                print("[â¹ï¸] Nessun evento trovato, canale DADDYLIVE non aggiunto.")
 
             for category, channels in categorized_channels.items(): 
                 if not channels: 
@@ -807,7 +806,7 @@ def eventi_m3u8_generator_world():
                     # Cerca un logo per questo evento
                     # Rimuovi l'orario dal titolo dell'evento prima di cercare il logo
                     clean_event_title = re.sub(r'\s*\(\d{1,2}:\d{2}\)\s*$', '', event_title)
-                    print(f"[🔍] Ricerca logo per: {clean_event_title}") 
+                    print(f"[ð] Ricerca logo per: {clean_event_title}") 
                     logo_url = search_logo_for_event(clean_event_title)
                     logo_attribute = f' tvg-logo="{logo_url}"' if logo_url else ''
      
@@ -816,9 +815,9 @@ def eventi_m3u8_generator_world():
                         if stream: 
                             cleaned_event_id = clean_tvg_id(event_title) # Usa event_title per tvg-id
                             f.write(f'#EXTINF:-1 tvg-id="{cleaned_event_id}" tvg-name="{category} | {tvg_name}"{logo_attribute} group-title="Eventi Live",{category} | {tvg_name}\n{stream}\n\n')
-                            print(f"[✓] {tvg_name}" + (f" (logo trovato)" if logo_url else " (nessun logo trovato)")) 
+                            print(f"[â] {tvg_name}" + (f" (logo trovato)" if logo_url else " (nessun logo trovato)")) 
                         else: 
-                            print(f"[✗] {tvg_name} - Nessuno stream trovato") 
+                            print(f"[â] {tvg_name} - Nessuno stream trovato") 
                     except Exception as e: 
                         print(f"[!] Errore su {tvg_name}: {e}") 
      
@@ -874,7 +873,7 @@ def eventi_m3u8_generator():
         """
         import re
         # Rimuove caratteri speciali comuni mantenendo solo lettere e numeri
-        cleaned = re.sub(r'[^a-zA-Z0-9Ã-Ã¿]', '', tvg_id)
+        cleaned = re.sub(r'[^a-zA-Z0-9ÃÂ-ÃÂ¿]', '', tvg_id)
         return cleaned.lower()
      
     def search_logo_for_event(event_name): 
@@ -886,7 +885,7 @@ def eventi_m3u8_generator():
             # Rimuovi eventuali riferimenti all'orario dal nome dell'evento
             # Cerca pattern come "Team A vs Team B (20:00)" e rimuovi la parte dell'orario
             clean_event_name = re.sub(r'\s*\(\d{1,2}:\d{2}\)\s*$', '', event_name)
-            # Se c'Ã¨ un ':', prendi solo la parte dopo
+            # Se c'ÃÂ¨ un ':', prendi solo la parte dopo
             if ':' in clean_event_name:
                 clean_event_name = clean_event_name.split(':', 1)[1].strip()
             
@@ -906,10 +905,10 @@ def eventi_m3u8_generator():
                 team1 = teams[0].strip()
                 team2 = teams[1].strip()
                 
-                print(f"[🔍] Ricerca logo per Team 1: {team1}")
+                print(f"[ð] Ricerca logo per Team 1: {team1}")
                 logo1_url = search_team_logo(team1)
                 
-                print(f"[🔍] Ricerca logo per Team 2: {team2}")
+                print(f"[ð] Ricerca logo per Team 2: {team2}")
                 logo2_url = search_team_logo(team2)
                 
                 # Se abbiamo trovato entrambi i loghi, creiamo un'immagine combinata
@@ -922,12 +921,12 @@ def eventi_m3u8_generator():
                         logos_dir = "logos"
                         os.makedirs(logos_dir, exist_ok=True)
                         
-                        # Verifica se l'immagine combinata esiste giÃ  e non Ã¨ obsoleta
+                        # Verifica se l'immagine combinata esiste giÃÂ  e non ÃÂ¨ obsoleta
                         output_filename = f"logos/{team1}_vs_{team2}.png"
                         if exists(output_filename):
                             file_age = current_time - os.path.getmtime(output_filename)
                             if file_age <= three_hours_in_seconds:
-                                print(f"[✓] Utilizzo immagine combinata esistente: {output_filename}")
+                                print(f"[â] Utilizzo immagine combinata esistente: {output_filename}")
                                 
                                 # Carica le variabili d'ambiente per GitHub
                                 NOMEREPO = os.getenv("NOMEREPO", "").strip()
@@ -936,7 +935,7 @@ def eventi_m3u8_generator():
                                 # Se le variabili GitHub sono disponibili, restituisci l'URL raw di GitHub
                                 if NOMEGITHUB and NOMEREPO:
                                     github_raw_url = f"https://raw.githubusercontent.com/{NOMEGITHUB}/{NOMEREPO}/main/{output_filename}"
-                                    print(f"[✓] URL GitHub generato per logo esistente: {github_raw_url}")
+                                    print(f"[â] URL GitHub generato per logo esistente: {github_raw_url}")
                                     return github_raw_url
                                 else:
                                     # Altrimenti restituisci il percorso locale
@@ -955,10 +954,10 @@ def eventi_m3u8_generator():
                                 response1.raise_for_status() # Controlla errori HTTP
                                 if 'image' in response1.headers.get('Content-Type', '').lower():
                                     img1 = Image.open(io.BytesIO(response1.content))
-                                    print(f"[✓] Logo1 scaricato con successo da: {logo1_url}")
+                                    print(f"[â] Logo1 scaricato con successo da: {logo1_url}")
                                 else:
-                                    print(f"[!] URL logo1 ({logo1_url}) non è un'immagine (Content-Type: {response1.headers.get('Content-Type')}).")
-                                    logo1_url = None # Invalida URL se non è un'immagine
+                                    print(f"[!] URL logo1 ({logo1_url}) non Ã¨ un'immagine (Content-Type: {response1.headers.get('Content-Type')}).")
+                                    logo1_url = None # Invalida URL se non Ã¨ un'immagine
                             except requests.exceptions.RequestException as e_req:
                                 print(f"[!] Errore scaricando logo1 ({logo1_url}): {e_req}")
                                 logo1_url = None
@@ -976,10 +975,10 @@ def eventi_m3u8_generator():
                                 response2.raise_for_status() # Controlla errori HTTP
                                 if 'image' in response2.headers.get('Content-Type', '').lower():
                                     img2 = Image.open(io.BytesIO(response2.content))
-                                    print(f"[✓] Logo2 scaricato con successo da: {logo2_url}")
+                                    print(f"[â] Logo2 scaricato con successo da: {logo2_url}")
                                 else:
-                                    print(f"[!] URL logo2 ({logo2_url}) non è un'immagine (Content-Type: {response2.headers.get('Content-Type')}).")
-                                    logo2_url = None # Invalida URL se non è un'immagine
+                                    print(f"[!] URL logo2 ({logo2_url}) non Ã¨ un'immagine (Content-Type: {response2.headers.get('Content-Type')}).")
+                                    logo2_url = None # Invalida URL se non Ã¨ un'immagine
                             except requests.exceptions.RequestException as e_req:
                                 print(f"[!] Errore scaricando logo2 ({logo2_url}): {e_req}")
                                 logo2_url = None
@@ -991,7 +990,7 @@ def eventi_m3u8_generator():
                         vs_path = "vs.png"
                         if exists(vs_path):
                             img_vs = Image.open(vs_path)
-                            # Converti l'immagine VS in modalitÃ  RGBA se non lo Ã¨ giÃ 
+                            # Converti l'immagine VS in modalitÃÂ  RGBA se non lo ÃÂ¨ giÃÂ 
                             if img_vs.mode != 'RGBA':
                                 img_vs = img_vs.convert('RGBA')
                         else:
@@ -1008,7 +1007,7 @@ def eventi_m3u8_generator():
                         # Procedi con la combinazione solo se entrambi i loghi sono stati caricati con successo
                         if not (img1 and img2):
                             print(f"[!] Impossibile caricare entrambi i loghi come immagini valide per la combinazione. Logo1 caricato: {bool(img1)}, Logo2 caricato: {bool(img2)}.")
-                            raise ValueError("Uno o entrambi i loghi non sono stati caricati correttamente.") # Questo forzerà l'except sottostante
+                            raise ValueError("Uno o entrambi i loghi non sono stati caricati correttamente.") # Questo forzerÃ  l'except sottostante
                         
                         # Ridimensiona le immagini a dimensioni uniformi
                         size = (150, 150)
@@ -1016,7 +1015,7 @@ def eventi_m3u8_generator():
                         img2 = img2.resize(size)
                         img_vs = img_vs.resize((100, 100))
                         
-                        # Assicurati che tutte le immagini siano in modalitÃ  RGBA per supportare la trasparenza
+                        # Assicurati che tutte le immagini siano in modalitÃÂ  RGBA per supportare la trasparenza
                         if img1.mode != 'RGBA':
                             img1 = img1.convert('RGBA')
                         if img2.mode != 'RGBA':
@@ -1036,7 +1035,7 @@ def eventi_m3u8_generator():
                         vs_x = (combined_width - 100) // 2
                         
                         # Crea una copia dell'immagine combinata prima di sovrapporre il VS
-                        # Questo passaggio Ã¨ importante per preservare i dettagli dei loghi sottostanti
+                        # Questo passaggio ÃÂ¨ importante per preservare i dettagli dei loghi sottostanti
                         combined_with_vs = combined.copy()
                         combined_with_vs.paste(img_vs, (vs_x, 25), img_vs)
                         
@@ -1047,7 +1046,7 @@ def eventi_m3u8_generator():
                         os.makedirs(os.path.dirname(output_filename), exist_ok=True)
                         combined.save(output_filename)
                         
-                        print(f"[✓] Immagine combinata creata: {output_filename}")
+                        print(f"[â] Immagine combinata creata: {output_filename}")
                         
                         # Carica le variabili d'ambiente per GitHub
                         NOMEREPO = os.getenv("NOMEREPO", "").strip()
@@ -1056,7 +1055,7 @@ def eventi_m3u8_generator():
                         # Se le variabili GitHub sono disponibili, restituisci l'URL raw di GitHub
                         if NOMEGITHUB and NOMEREPO:
                             github_raw_url = f"https://raw.githubusercontent.com/{NOMEGITHUB}/{NOMEREPO}/main/{output_filename}"
-                            print(f"[✓] URL GitHub generato: {github_raw_url}")
+                            print(f"[â] URL GitHub generato: {github_raw_url}")
                             return github_raw_url
                         else:
                             # Altrimenti restituisci il percorso locale
@@ -1072,7 +1071,7 @@ def eventi_m3u8_generator():
             if ':' in event_name:
                 # Usa la parte prima dei ":" per la ricerca
                 prefix_name = event_name.split(':', 1)[0].strip()
-                print(f"[🔍] Tentativo ricerca logo con prefisso: {prefix_name}")
+                print(f"[ð] Tentativo ricerca logo con prefisso: {prefix_name}")
                 
                 # Prepara la query di ricerca con il prefisso
                 search_query = urllib.parse.quote(f"{prefix_name} logo")
@@ -1106,18 +1105,18 @@ def eventi_m3u8_generator():
                             # Prendi il primo risultato che sembra un logo (preferibilmente PNG o SVG)
                             for match in matches:
                                 if '.png' in match.lower() or '.svg' in match.lower():
-                                    print(f"[✓] Logo trovato con prefisso: {match}")
+                                    print(f"[â] Logo trovato con prefisso: {match}")
                                     return match
                             # Se non troviamo PNG o SVG, prendi il primo risultato
-                            print(f"[✓] Logo trovato con prefisso: {matches[0]}")
+                            print(f"[â] Logo trovato con prefisso: {matches[0]}")
                             return matches[0]
             
             # Se non riusciamo a identificare le squadre e il prefisso non ha dato risultati, procedi con la ricerca normale
-            print(f"[🔍] Ricerca standard per: {clean_event_name}")
+            print(f"[ð] Ricerca standard per: {clean_event_name}")
             
             
             # Se non riusciamo a identificare le squadre, procedi con la ricerca normale
-            # Prepara la query di ricerca piÃ¹ specifica
+            # Prepara la query di ricerca piÃÂ¹ specifica
             search_query = urllib.parse.quote(f"{clean_event_name} logo")
             
             # Utilizziamo l'API di Bing Image Search con parametri migliorati
@@ -1313,9 +1312,9 @@ def eventi_m3u8_generator():
                         # crea datetime completo con data evento e orario evento 
                         event_datetime = datetime.combine(date_obj, time_obj.time()) 
      
-                        # Controllo: includi solo se l'evento è iniziato da meno di 2 ore 
+                        # Controllo: includi solo se l'evento Ã¨ iniziato da meno di 2 ore 
                         if now - event_datetime > timedelta(hours=2): 
-                            # Evento iniziato da più di 2 ore -> salto 
+                            # Evento iniziato da piÃ¹ di 2 ore -> salto 
                             continue 
      
                         time_formatted = time_obj.strftime("%H:%M") 
@@ -1354,7 +1353,7 @@ def eventi_m3u8_generator():
                 f.write(f'#EXTINF:-1 tvg-name="DADDYLIVE" group-title="Eventi Live",DADDYLIVE\n')
                 f.write("https://example.com.m3u8\n\n")
             else:
-                print("[ℹ️] Nessun evento trovato, canale DADDYLIVE non aggiunto.")
+                print("[â¹ï¸] Nessun evento trovato, canale DADDYLIVE non aggiunto.")
 
             for category, channels in categorized_channels.items(): 
                 if not channels: 
@@ -1368,7 +1367,7 @@ def eventi_m3u8_generator():
                     # Cerca un logo per questo evento
                     # Rimuovi l'orario dal titolo dell'evento prima di cercare il logo
                     clean_event_title = re.sub(r'\s*\(\d{1,2}:\d{2}\)\s*$', '', event_title)
-                    print(f"[🔍] Ricerca logo per: {clean_event_title}") 
+                    print(f"[ð] Ricerca logo per: {clean_event_title}") 
                     logo_url = search_logo_for_event(clean_event_title)
                     logo_attribute = f' tvg-logo="{logo_url}"' if logo_url else ''
      
@@ -1377,9 +1376,9 @@ def eventi_m3u8_generator():
                         if stream: 
                             cleaned_event_id = clean_tvg_id(event_title) # Usa event_title per tvg-id
                             f.write(f'#EXTINF:-1 tvg-id="{cleaned_event_id}" tvg-name="{category} | {tvg_name}"{logo_attribute} group-title="Eventi Live",{category} | {tvg_name}\n{stream}\n\n')
-                            print(f"[✓] {tvg_name}" + (f" (logo trovato)" if logo_url else " (nessun logo trovato)")) 
+                            print(f"[â] {tvg_name}" + (f" (logo trovato)" if logo_url else " (nessun logo trovato)")) 
                         else: 
-                            print(f"[✗] {tvg_name} - Nessuno stream trovato") 
+                            print(f"[â] {tvg_name} - Nessuno stream trovato") 
                     except Exception as e: 
                         print(f"[!] Errore su {tvg_name}: {e}") 
      
@@ -1419,7 +1418,7 @@ def eventi_sps():
         if not date_text:
             return "", ""
         match = re.search(
-            r'(?:[a-zA-Zì]+\s+)?(\d{1,2})\s+([a-zA-Z]+)\s+(?:ore\s+)?(\d{1,2}:\d{2})',
+            r'(?:[a-zA-ZÃ¬]+\s+)?(\d{1,2})\s+([a-zA-Z]+)\s+(?:ore\s+)?(\d{1,2}:\d{2})',
             date_text,
             re.IGNORECASE
         )
@@ -1506,8 +1505,8 @@ def eventi_sps():
 
             # Estrai data e ora formattate
             full_event_datetime_str = ""
-            event_date_comparable = "" # Conterrà "DD/MM" per il confronto
-            event_time_str = ""        # Conterrà "HH:MM"
+            event_date_comparable = "" # ConterrÃ  "DD/MM" per il confronto
+            event_time_str = ""        # ConterrÃ  "HH:MM"
             date_span = soup.find('span', class_='uk-text-meta uk-text-small')
             if date_span:
                 date_text = date_span.get_text(strip=True)
@@ -1532,7 +1531,7 @@ def eventi_sps():
             if is_perma_channel:
                 if event_title_from_html and event_title_from_html != "Unknown Event":
                     league_info = event_title_from_html
-                # Se il titolo del canale perma non è stato trovato, league_info resta "Event"
+                # Se il titolo del canale perma non Ã¨ stato trovato, league_info resta "Event"
             else:
                 # Per canali non-perma (eventi specifici), cerca lo span della lega/competizione
                 league_spans = soup.find_all(
@@ -1565,7 +1564,7 @@ def eventi_sps():
                 if not stream_url:
                     continue
 
-                # Determina se è un canale permanente o standard
+                # Determina se Ã¨ un canale permanente o standard
                 is_perma = "perma" in event_url.lower()
                 if is_perma:
                     image_url = f"https://sportstreaming.net/assets/img/live/perma/live{perma_count}.png"
@@ -1581,7 +1580,7 @@ def eventi_sps():
 
                 tvg_name_prefix = f"{event_time} " if event_time else ""
                 tvg_name_final = f"{event_title} | {league_info} | {tvg_name_prefix}".strip()
-                if not tvg_name_final: # Fallback se il titolo è vuoto
+                if not tvg_name_final: # Fallback se il titolo Ã¨ vuoto
                     tvg_name_final = "Eventi Live"
 
                 # Codifica gli header per l'URL
@@ -1590,13 +1589,13 @@ def eventi_sps():
                 encoded_origin = quote_plus(headers["Origin"])
 
                 # Costruisci l'URL finale con il proxy e gli header
-                # stream_url qui è l'URL originale dello stream (es. https://xuione.sportstreaming.net/...)
+                # stream_url qui Ã¨ l'URL originale dello stream (es. https://xuione.sportstreaming.net/...)
                 final_stream_url = f"{MFP_IP.rstrip('/')}/proxy/hls/manifest.m3u8?api_password={MFP_PASSWORD}&d={stream_url}&h_user-agent={encoded_ua}&h_referer={encoded_referer}&h_origin={encoded_origin}"
 
                 group_title_text = "Sport" if is_perma else "Eventi Live"
 
                 # Aggiungi il canale iniziale/informativo solo se ci sono eventi da scrivere
-                if f.tell() == len("#EXTM3U\n"): # Controlla se è stata scritta solo l'intestazione iniziale
+                if f.tell() == len("#EXTM3U\n"): # Controlla se Ã¨ stata scritta solo l'intestazione iniziale
                     f.write(f'#EXTINF:-1 tvg-name="SPORTSTREAMING" group-title="Eventi Live",SPORTSTREAMING\n')
                     f.write("https://example.com.m3u8\n\n")
 
@@ -1618,12 +1617,12 @@ def eventi_sps():
         else:
             video_streams = []
             for event_url in event_pages:
-                # print(f"Analizzo: {event_url}") # Rimosso per output più pulito, riattivare se necessario
+                # print(f"Analizzo: {event_url}") # Rimosso per output piÃ¹ pulito, riattivare se necessario
                 stream_url, event_date_str, event_time, event_title, league_info = get_event_details(event_url)
                 
                 if stream_url:
                     is_perma = "perma" in event_url.lower()
-                    # Modifica: Includi solo se NON è perma E la data corrisponde
+                    # Modifica: Includi solo se NON Ã¨ perma E la data corrisponde
                     if not is_perma and (event_date_str == current_date_dd_mm):
                         print(f"Includo: {event_title} (URL: {event_url}, Data evento: {event_date_str})")
                         video_streams.append((event_url, stream_url, event_time, event_title, league_info))
@@ -1643,7 +1642,7 @@ def eventi_sps():
                     # update_m3u_file confirms file creation.
                     pass # Avoid redundant messages.
                 else: # event_pages were found, but no streams matched criteria
-                    print("Nota: Nessun flusso video specifico per gli eventi odierni è stato aggiunto a eventisps.m3u8 (potrebbe contenere solo l'intestazione).")
+                    print("Nota: Nessun flusso video specifico per gli eventi odierni Ã¨ stato aggiunto a eventisps.m3u8 (potrebbe contenere solo l'intestazione).")
 
 # Funzione per il quarto script (schedule_extractor.py)
 def schedule_extractor():
@@ -1819,11 +1818,11 @@ def epg_eventi_generator_world():
     import json
     from datetime import datetime, timedelta
     
-    # Funzione di utilitÃ  per pulire il testo (rimuovere tag HTML span)
+    # Funzione di utilitÃÂ  per pulire il testo (rimuovere tag HTML span)
     def clean_text(text):
         return re.sub(r'</?span.*?>', '', str(text))
     
-    # Funzione di utilitÃ  per pulire il Channel ID (rimuovere spazi e caratteri speciali)
+    # Funzione di utilitÃÂ  per pulire il Channel ID (rimuovere spazi e caratteri speciali)
     def clean_channel_id(text):
         """Rimuove caratteri speciali e spazi dal channel ID lasciando tutto attaccato"""
         # Rimuovi prima i tag HTML
@@ -1872,7 +1871,7 @@ def epg_eventi_generator_world():
                         filter_start_time = datetime.strptime("00:00", "%H:%M").time()
                         filter_end_time = datetime.strptime("04:00", "%H:%M").time()
 
-                        # Escludi eventi se l'orario Ã¨ compreso tra 00:00 e 04:00 inclusi
+                        # Escludi eventi se l'orario ÃÂ¨ compreso tra 00:00 e 04:00 inclusi
                         if filter_start_time <= event_actual_time <= filter_end_time:
                             continue # Salta questo evento e passa al successivo
                     except ValueError:
@@ -1894,7 +1893,7 @@ def epg_eventi_generator_world():
                         if isinstance(event_info, dict):
                             filtered_events.append({**event_info, "channels": filtered_channels})
                         else:
-                            # Logga un avviso se il formato dell'evento non Ã¨ quello atteso
+                            # Logga un avviso se il formato dell'evento non ÃÂ¨ quello atteso
                             print(f"[!] Formato evento non valido durante il filtraggio per EPG: {event_info}")
                 
                 if filtered_events:
@@ -1915,7 +1914,7 @@ def epg_eventi_generator_world():
         current_datetime_utc = datetime.utcnow()
         current_datetime_local = current_datetime_utc + italian_offset
     
-        # Tiene traccia degli ID dei canali per cui Ã¨ giÃ  stato scritto il tag <channel>
+        # Tiene traccia degli ID dei canali per cui ÃÂ¨ giÃÂ  stato scritto il tag <channel>
         channel_ids_processed_for_channel_tag = set() 
     
         for date_key, categories in json_data.items():
@@ -1981,7 +1980,7 @@ def epg_eventi_generator_world():
     
                         channel_name_cleaned = clean_text(channel_data.get("channel_name", "Canale Sconosciuto"))
     
-                        # Crea tag <channel> se non giÃ  processato
+                        # Crea tag <channel> se non giÃÂ  processato
                         if channel_id not in channel_ids_processed_for_channel_tag:
                             epg_content += f'  <channel id="{channel_id}">\n'
                             epg_content += f'    <display-name>{event_name}</display-name>\n'
@@ -1993,7 +1992,7 @@ def epg_eventi_generator_world():
     
                         # Determina l'inizio dell'annuncio
                         if channel_id in last_event_end_time_per_channel_on_date:
-                            # C'Ã¨ stato un evento precedente su questo canale in questa data
+                            # C'ÃÂ¨ stato un evento precedente su questo canale in questa data
                             previous_event_end_time_local = last_event_end_time_per_channel_on_date[channel_id]
                             
                             # Assicurati che l'evento precedente termini prima che inizi quello corrente
@@ -2010,7 +2009,7 @@ def epg_eventi_generator_world():
     
                         # Assicura che l'inizio dell'annuncio sia prima della fine
                         if announcement_start_local < announcement_stop_local:
-                            announcement_title = f'Inizia  alle {event_datetime_local.strftime("%H:%M")}.' # Orario italiano
+                            announcement_title = f'IniziaÂ  alle {event_datetime_local.strftime("%H:%M")}.' # Orario italiano
                             
                             epg_content += f'  <programme start="{announcement_start_local.strftime("%Y%m%d%H%M%S")} {italian_offset_str}" stop="{announcement_stop_local.strftime("%Y%m%d%H%M%S")} {italian_offset_str}" channel="{channel_id}">\n'
                             epg_content += f'    <title lang="it">{announcement_title}</title>\n'
@@ -2020,7 +2019,7 @@ def epg_eventi_generator_world():
                         elif announcement_start_local == announcement_stop_local:
                             print(f"[INFO] Annuncio di durata zero saltato per l'evento '{event_name}' sul canale '{channel_id}'.")
                         else: # announcement_start_local > announcement_stop_local
-                            print(f"[!] Attenzione: L'orario di inizio calcolato per l'annuncio Ã¨ successivo all'orario di fine per l'evento '{event_name}' sul canale '{channel_id}'. Annuncio saltato.")
+                            print(f"[!] Attenzione: L'orario di inizio calcolato per l'annuncio ÃÂ¨ successivo all'orario di fine per l'evento '{event_name}' sul canale '{channel_id}'. Annuncio saltato.")
     
                         # --- EVENTO PRINCIPALE ---
                         main_event_start_local = event_datetime_local 
@@ -2043,7 +2042,7 @@ def epg_eventi_generator_world():
         try:
             with open(output_file_path, "w", encoding="utf-8") as file:
                 file.write(epg_content)
-            print(f"[✓] File EPG XML salvato con successo: {output_file_path}")
+            print(f"[â] File EPG XML salvato con successo: {output_file_path}")
             return True
         except Exception as e:
             print(f"[!] Errore nel salvataggio del file EPG XML: {e}")
@@ -2069,7 +2068,7 @@ def epg_eventi_generator_world():
         success = save_epg_xml(epg_content, output_file_path)
         
         if success:
-            print(f"[✓] Generazione EPG XML completata con successo!")
+            print(f"[â] Generazione EPG XML completata con successo!")
             return True
         else:
             print(f"[!] Errore durante la generazione EPG XML.")
@@ -2097,11 +2096,11 @@ def epg_eventi_generator():
     import json
     from datetime import datetime, timedelta
     
-    # Funzione di utilitÃ  per pulire il testo (rimuovere tag HTML span)
+    # Funzione di utilitÃÂ  per pulire il testo (rimuovere tag HTML span)
     def clean_text(text):
         return re.sub(r'</?span.*?>', '', str(text))
     
-    # Funzione di utilitÃ  per pulire il Channel ID (rimuovere spazi e caratteri speciali)
+    # Funzione di utilitÃÂ  per pulire il Channel ID (rimuovere spazi e caratteri speciali)
     def clean_channel_id(text):
         """Rimuove caratteri speciali e spazi dal channel ID lasciando tutto attaccato"""
         # Rimuovi prima i tag HTML
@@ -2156,7 +2155,7 @@ def epg_eventi_generator():
                         if isinstance(event_info, dict):
                             filtered_events.append({**event_info, "channels": filtered_channels})
                         else:
-                            # Logga un avviso se il formato dell'evento non Ã¨ quello atteso
+                            # Logga un avviso se il formato dell'evento non ÃÂ¨ quello atteso
                             print(f"[!] Formato evento non valido durante il filtraggio per EPG: {event_info}")
                 
                 if filtered_events:
@@ -2177,7 +2176,7 @@ def epg_eventi_generator():
         current_datetime_utc = datetime.utcnow()
         current_datetime_local = current_datetime_utc + italian_offset
     
-        # Tiene traccia degli ID dei canali per cui Ã¨ giÃ  stato scritto il tag <channel>
+        # Tiene traccia degli ID dei canali per cui ÃÂ¨ giÃÂ  stato scritto il tag <channel>
         channel_ids_processed_for_channel_tag = set() 
     
         for date_key, categories in json_data.items():
@@ -2242,7 +2241,7 @@ def epg_eventi_generator():
     
                         channel_name_cleaned = clean_text(channel_data.get("channel_name", "Canale Sconosciuto"))
     
-                        # Crea tag <channel> se non giÃ  processato
+                        # Crea tag <channel> se non giÃÂ  processato
                         if channel_id not in channel_ids_processed_for_channel_tag:
                             epg_content += f'  <channel id="{channel_id}">\n'
                             epg_content += f'    <display-name>{event_name}</display-name>\n'
@@ -2254,7 +2253,7 @@ def epg_eventi_generator():
     
                         # Determina l'inizio dell'annuncio
                         if channel_id in last_event_end_time_per_channel_on_date:
-                            # C'Ã¨ stato un evento precedente su questo canale in questa data
+                            # C'ÃÂ¨ stato un evento precedente su questo canale in questa data
                             previous_event_end_time_local = last_event_end_time_per_channel_on_date[channel_id]
                             
                             # Assicurati che l'evento precedente termini prima che inizi quello corrente
@@ -2271,7 +2270,7 @@ def epg_eventi_generator():
     
                         # Assicura che l'inizio dell'annuncio sia prima della fine
                         if announcement_start_local < announcement_stop_local:
-                            announcement_title = f'Inizia  alle {event_datetime_local.strftime("%H:%M")}.' # Orario italiano
+                            announcement_title = f'IniziaÂ  alle {event_datetime_local.strftime("%H:%M")}.' # Orario italiano
                             
                             epg_content += f'  <programme start="{announcement_start_local.strftime("%Y%m%d%H%M%S")} {italian_offset_str}" stop="{announcement_stop_local.strftime("%Y%m%d%H%M%S")} {italian_offset_str}" channel="{channel_id}">\n'
                             epg_content += f'    <title lang="it">{announcement_title}</title>\n'
@@ -2281,7 +2280,7 @@ def epg_eventi_generator():
                         elif announcement_start_local == announcement_stop_local:
                             print(f"[INFO] Annuncio di durata zero saltato per l'evento '{event_name}' sul canale '{channel_id}'.")
                         else: # announcement_start_local > announcement_stop_local
-                            print(f"[!] Attenzione: L'orario di inizio calcolato per l'annuncio Ã¨ successivo all'orario di fine per l'evento '{event_name}' sul canale '{channel_id}'. Annuncio saltato.")
+                            print(f"[!] Attenzione: L'orario di inizio calcolato per l'annuncio ÃÂ¨ successivo all'orario di fine per l'evento '{event_name}' sul canale '{channel_id}'. Annuncio saltato.")
     
                         # --- EVENTO PRINCIPALE ---
                         main_event_start_local = event_datetime_local 
@@ -2304,7 +2303,7 @@ def epg_eventi_generator():
         try:
             with open(output_file_path, "w", encoding="utf-8") as file:
                 file.write(epg_content)
-            print(f"[✓] File EPG XML salvato con successo: {output_file_path}")
+            print(f"[â] File EPG XML salvato con successo: {output_file_path}")
             return True
         except Exception as e:
             print(f"[!] Errore nel salvataggio del file EPG XML: {e}")
@@ -2330,7 +2329,7 @@ def epg_eventi_generator():
         success = save_epg_xml(epg_content, output_file_path)
         
         if success:
-            print(f"[✓] Generazione EPG XML completata con successo!")
+            print(f"[â] Generazione EPG XML completata con successo!")
             return True
         else:
             print(f"[!] Errore durante la generazione EPG XML.")
@@ -2490,7 +2489,7 @@ def italy_channels():
 
     # --- Funzioni per risolvere gli stream Daddylive ---
     def get_stream_from_channel_id(channel_id):
-        # LINK_DADDY è una variabile globale
+        # LINK_DADDY Ã¨ una variabile globale
         # italy_channels usa /stream/stream-{id}.php per i canali Daddylive dalla pagina HTML
         raw_php_url = f"{LINK_DADDY.rstrip('/')}/stream/stream-{channel_id}.php"
         
@@ -2505,7 +2504,7 @@ def italy_channels():
     def fetch_channels_from_daddylive_page(page_url, base_daddy_url):
         print(f"Tentativo di fetch dei canali da: {page_url}")
         channels = []
-        seen_daddy_channel_ids = set() # Set per tracciare i channel_id già visti da Daddylive
+        seen_daddy_channel_ids = set() # Set per tracciare i channel_id giÃ  visti da Daddylive
         try:
             response = session.get(page_url, timeout=HTTP_TIMEOUT, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'})
             response.raise_for_status()
@@ -2516,7 +2515,7 @@ def italy_channels():
             # Marcatori che suggeriscono un canale NON italiano (per evitare falsi positivi)
             non_italian_markers = [
                 " (de)", " (fr)", " (es)", " (uk)", " (us)", " (pt)", " (gr)", " (nl)", " (tr)", " (ru)",
-                " deutsch", " france", " español", " arabic", " greek", " turkish", " russian", " albania",
+                " deutsch", " france", " espaÃ±ol", " arabic", " greek", " turkish", " russian", " albania",
                 " portugal" # Aggiunto basandomi sull'esempio fornito
             ]
 
@@ -2543,7 +2542,7 @@ def italy_channels():
                     lower_channel_name = channel_name_raw.lower()
 
                     if channel_id in seen_daddy_channel_ids:
-                        print(f"Skipping Daddylive channel '{channel_name_raw}' (ID: {channel_id}) perché l'ID è già stato processato.")
+                        print(f"Skipping Daddylive channel '{channel_name_raw}' (ID: {channel_id}) perchÃ© l'ID Ã¨ giÃ  stato processato.")
                         continue # Passa al prossimo item
 
                     # Filtro primario: deve contenere "italy"
@@ -2552,7 +2551,7 @@ def italy_channels():
                         for marker in non_italian_markers:
                             if marker in lower_channel_name:
                                 is_confirmed_non_italian_by_marker = True
-                                print(f"Skipping Daddylive channel '{channel_name_raw}' (ID: {channel_id}) perché, pur contenendo 'italy', ha anche un marcatore non italiano: '{marker}'")
+                                print(f"Skipping Daddylive channel '{channel_name_raw}' (ID: {channel_id}) perchÃ©, pur contenendo 'italy', ha anche un marcatore non italiano: '{marker}'")
                                 break
                         
                         if not is_confirmed_non_italian_by_marker:
@@ -2565,9 +2564,9 @@ def italy_channels():
                             else:
                                 print(f"Impossibile risolvere lo stream per {channel_name_raw} (ID: {channel_id})")
                     # else:
-                        # Questo blocco è commentato per non intasare i log con canali non italiani
+                        # Questo blocco Ã¨ commentato per non intasare i log con canali non italiani
                         # Non stampiamo nulla per i canali che non contengono "italy" per non intasare il log
-                        # print(f"Skipping Daddylive channel '{channel_name_raw}' (ID: {channel_id}) perché non contiene 'italy' nel nome.")
+                        # print(f"Skipping Daddylive channel '{channel_name_raw}' (ID: {channel_id}) perchÃ© non contiene 'italy' nel nome.")
             # --- FINE LOGICA DI PARSING E FILTRAGGIO ---
 
             if not channels:
@@ -2595,13 +2594,13 @@ def italy_channels():
                         # Canale Vavoo o manuale, applica il formato proxy/hls
                         final_url_to_write = f"{MFP_IP.rstrip('/')}/proxy/hls/manifest.m3u8?api_password={MFP_PASSWORD}&d={raw_channel_url}"
                     else:
-                        # Canale Daddylive (URL già formattato o None) o MFP_IP non impostato (usa URL grezzo)
+                        # Canale Daddylive (URL giÃ  formattato o None) o MFP_IP non impostato (usa URL grezzo)
                         final_url_to_write = raw_channel_url
 
-                    if final_url_to_write: # Scrivi solo se l'URL è valido
+                    if final_url_to_write: # Scrivi solo se l'URL Ã¨ valido
                         f.write(f'#EXTINF:-1 tvg-id="{ch.get("tvg_id", "")}" tvg-name="{tvg_name_cleaned}" tvg-logo="{ch.get("logo", DEFAULT_TVG_ICON)}" group-title="{category}",{ch["name"]}\n')
                         
-                        # Controlla se è un file .php (più generico)
+                        # Controlla se Ã¨ un file .php (piÃ¹ generico)
                         if final_url_to_write.endswith('.php') or 'kangal.icu' in final_url_to_write:
                             # Per i file .php, non aggiungere i parametri VAVOO
                             f.write(f"{final_url_to_write}\n\n")
@@ -2620,7 +2619,7 @@ def italy_channels():
         logos_dict = fetch_logos(LOGOS_FILE)
         channel_id_map = create_channel_id_map(epg_root)
         
-        all_fetched_channels = [] # Conterrà tuple (nome_canale, url_stream)
+        all_fetched_channels = [] # ConterrÃ  tuple (nome_canale, url_stream)
 
         # 1. Canali da sorgenti JSON (Vavoo)
         print("\n--- Fetching canali da sorgenti Vavoo (JSON) ---")
@@ -2644,7 +2643,7 @@ def italy_channels():
             # 2. Trasformazioni specifiche per Daddylive:
             #    - Rimuovi "italy" (case insensitive)
             #    - Converti in maiuscolo
-            # Questo sarà il nome base per la gestione dei duplicati Daddylive
+            # Questo sarÃ  il nome base per la gestione dei duplicati Daddylive
             base_daddy_name = re.sub(r'italy', '', name_after_initial_clean, flags=re.IGNORECASE).strip()
             base_daddy_name = re.sub(r'\s+', ' ', base_daddy_name).strip() # Rimuovi spazi doppi
             base_daddy_name = base_daddy_name.upper()
@@ -2669,7 +2668,7 @@ def italy_channels():
 
 
             # Gestione skip DAZN (usa il nome base trasformato per il check)
-            # clean_channel_name potrebbe già aver trasformato "dazn 1" in "DAZN2"
+            # clean_channel_name potrebbe giÃ  aver trasformato "dazn 1" in "DAZN2"
             if base_daddy_name == "DAZN" or base_daddy_name == "DAZN2":
                 print(f"Skipping canale Daddylive (HTML) a causa della regola DAZN: {raw_name} (base trasformato: {base_daddy_name})")
                 continue
@@ -2697,7 +2696,7 @@ def italy_channels():
 
         # Processa canali da Vavoo e Daddylive HTML (formato: (nome, url))
         for name, url in all_fetched_channels:
-            # 'name' è il nome finale che verrà visualizzato, 
+            # 'name' Ã¨ il nome finale che verrÃ  visualizzato, 
             # es. "CANALE SPORT (D) (2)" o "CANALE NEWS (3)" (da Vavoo)
             category = classify_channel(name)
 
@@ -2713,25 +2712,25 @@ def italy_channels():
             # Rimuovi suffissi numerici per duplicati, es. (2), (3)...
             name_for_lookup = re.sub(r'\s*\(\d+\)$', '', name_for_lookup).strip()
             # A questo punto, name_for_lookup dovrebbe essere il nome del canale "pulito" 
-            # es. "CANALE SPORT" o "CANALE NEWS" (già in maiuscolo se da Daddylive)
+            # es. "CANALE SPORT" o "CANALE NEWS" (giÃ  in maiuscolo se da Daddylive)
 
             # Logica per assegnazione logo
             final_logo_url = DEFAULT_TVG_ICON # Inizializza con il logo di default
             sky_sport_daddy_logo = "https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/italy/hd/sky-sport-hd-it.png"
 
-            # Controlla se il canale è uno dei canali Daddylive SKY SPORT 251-256
-            # name_for_lookup è il nome base pulito (es. "SKY SPORT 251")
-            # name è il nome completo con suffisso (es. "SKY SPORT 251 (D)")
-            if name.upper().endswith(" (D)"): # Verifica se è un canale Daddylive
+            # Controlla se il canale Ã¨ uno dei canali Daddylive SKY SPORT 251-256
+            # name_for_lookup Ã¨ il nome base pulito (es. "SKY SPORT 251")
+            # name Ã¨ il nome completo con suffisso (es. "SKY SPORT 251 (D)")
+            if name.upper().endswith(" (D)"): # Verifica se Ã¨ un canale Daddylive
                 if re.match(r"SKY SPORT (25[1-6])$", name_for_lookup.upper()):
-                    # È un canale Daddylive SKY SPORT 251-256
+                    # Ã un canale Daddylive SKY SPORT 251-256
                     final_logo_url = sky_sport_daddy_logo
                     print(f"Logo specifico '{final_logo_url}' assegnato a Daddylive channel '{name}' (lookup name: '{name_for_lookup}')")
                 else:
-                    # È un canale Daddylive, ma non uno dei SKY SPORT 251-256 target, usa il lookup normale
+                    # Ã un canale Daddylive, ma non uno dei SKY SPORT 251-256 target, usa il lookup normale
                     final_logo_url = logos_dict.get(name_for_lookup.lower(), DEFAULT_TVG_ICON)
             else:
-                # Non è un canale Daddylive (es. Vavoo), usa il lookup normale
+                # Non Ã¨ un canale Daddylive (es. Vavoo), usa il lookup normale
                 final_logo_url = logos_dict.get(name_for_lookup.lower(), DEFAULT_TVG_ICON)
 
             organized_channels.setdefault(category, []).append({
@@ -2818,7 +2817,7 @@ def world_channels_generator():
                     if MFP_IP:
                         final_url_to_write = f"{MFP_IP.rstrip('/')}/proxy/hls/manifest.m3u8?api_password={MFP_PASSWORD}&d={final_url}"
                     else:
-                        # Se MFP_IP non è settato, usa l'URL originale
+                        # Se MFP_IP non Ã¨ settato, usa l'URL originale
                         final_url_to_write = url
                     f.write(f'#EXTINF:-1 tvg-name="{name}" group-title="{country}", {name}\n')
                     f.write(f"{final_url_to_write}&h_User-Agent=VAVOO2%2F6&h_Referer=https%3A%2F%2Fvavoo.to%2F&h_Origin=https%3A%2F%2Fvavoo.to\n\n")
@@ -2830,7 +2829,7 @@ def world_channels_generator():
             channels = fetch_channels(url)
             for ch in channels:
                 clean_name = clean_channel_name(ch["name"])
-                country = ch.get("country", "Unknown")  # Estrai la nazione del canale, default Ã¨ "Unknown"
+                country = ch.get("country", "Unknown")  # Estrai la nazione del canale, default ÃÂ¨ "Unknown"
                 all_channels.append((clean_name, f"{url}/play/{ch['id']}/index.m3u8", country))
     
         save_m3u8(all_channels)
