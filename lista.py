@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
+
 def merger_playlist():
     # Codice del primo script qui
     # Aggiungi il codice del tuo script "merger_playlist.py" in questa funzione.
