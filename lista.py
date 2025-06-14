@@ -2602,7 +2602,7 @@ def italy_channels():
                         f.write(f'#EXTINF:-1 tvg-id="{ch.get("tvg_id", "")}" tvg-name="{tvg_name_cleaned}" tvg-logo="{ch.get("logo", DEFAULT_TVG_ICON)}" group-title="{category}",{ch["name"]}\n')
                         
                         # Controlla se è un file .php (più generico)
-                        if final_url_to_write.endswith('.php'):
+                        if final_url_to_write.endswith('.php') or 'kangal.icu' in final_url_to_write:
                             # Per i file .php, non aggiungere i parametri VAVOO
                             f.write(f"{final_url_to_write}\n\n")
                         else:
