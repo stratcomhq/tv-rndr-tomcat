@@ -2,6 +2,15 @@
 #EXTINF:-1 tvg-name="DADDYLIVE" group-title="Eventi Live",DADDYLIVE
 https://example.com.m3u8
 
-#EXTINF:-1 tvg-id="fifaclubworldcupchelseavslosangelesfc" tvg-name="Soccer | FIFA Club World Cup : Chelsea vs Los Angeles FC (21:00)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Chelsea_vs_Los Angeles FC.png" group-title="Eventi Live",Soccer | FIFA Club World Cup : Chelsea vs Los Angeles FC (21:00)
-https://daddylive.dad/stream/stream-3.php
+#EXTINF:-1 tvg-id="fifaclubworldcupfluminensevsborussiadortmund" tvg-name="Soccer | FIFA Club World Cup : Fluminense vs Borussia Dortmund (18:00)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Fluminense_vs_Borussia Dortmund.png" group-title="Eventi Live",Soccer | FIFA Club World Cup : Fluminense vs Borussia Dortmund (18:00)
+https://daddylive.dad/stream/stream-1.php
+
+#EXTINF:-1 tvg-id="uefaeurou21spainu21vsitalyu21" tvg-name="Soccer | UEFA Euro U-21 : Spain U21 vs Italy U21 (21:00)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Spain U21_vs_Italy U21.png" group-title="Eventi Live",Soccer | UEFA Euro U-21 : Spain U21 vs Italy U21 (21:00)
+https://daddylive.dad/stream/stream-851.php
+
+#EXTINF:-1 tvg-id="legaabresciavsvirtusbologna" tvg-name="Basketball | Lega A : Brescia vs Virtus Bologna (20:30)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Brescia_vs_Virtus Bologna.png" group-title="Eventi Live",Basketball | Lega A : Brescia vs Virtus Bologna (20:30)
+https://daddylive.dad/stream/stream-879.php
+
+#EXTINF:-1 tvg-id="tourofswitzerlandstage3menaarauheiden191km" tvg-name="Cycling | Tour of Switzerland | Stage 3 Men | Aarau - Heiden (191 km) (14:45)" tvg-logo="https://www.magicswitzerland.com/wp-content/uploads/2017/07/grand-tour-of-switzerland-logo.png" group-title="Eventi Live",Cycling | Tour of Switzerland | Stage 3 Men | Aarau - Heiden (191 km) (14:45)
+https://daddylive.dad/stream/stream-878.php
 
