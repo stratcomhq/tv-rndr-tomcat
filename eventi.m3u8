@@ -2,12 +2,6 @@
 #EXTINF:-1 tvg-name="DADDYLIVE" group-title="Eventi Live",DADDYLIVE
 https://example.com.m3u8
 
-#EXTINF:-1 tvg-id="fifaclubworldcupflamengovschelsea" tvg-name="Soccer | FIFA Club World Cup : Flamengo vs Chelsea (20:00)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Flamengo_vs_Chelsea.png" group-title="Eventi Live",Soccer | FIFA Club World Cup : Flamengo vs Chelsea (20:00)
-https://daddylive.dad/stream/stream-6.php
-
 #EXTINF:-1 tvg-id="italyseriebsalernitanavssampdoria" tvg-name="Soccer | Italy - Serie B : Salernitana vs Sampdoria (20:30)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Salernitana_vs_Sampdoria.png" group-title="Eventi Live",Soccer | Italy - Serie B : Salernitana vs Sampdoria (20:30)
 https://daddylive.dad/stream/stream-69.php
-
-#EXTINF:-1 tvg-id="leagueofnationsjumpingrotterdam" tvg-name="Equestrian | League of Nations Jumping | Rotterdam (19:15)" tvg-logo="https://www.ga-eagles.nl/wp-content/uploads/2023/10/Sparta_Rotterdam_logo.svg.png" group-title="Eventi Live",Equestrian | League of Nations Jumping | Rotterdam (19:15)
-https://daddylive.dad/stream/stream-878.php
 
