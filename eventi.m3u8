@@ -2,22 +2,22 @@
 #EXTINF:-1 tvg-name="DADDYLIVE" group-title="Eventi Live",DADDYLIVE
 https://example.com.m3u8
 
-#EXTINF:-1 tvg-id="uefaeurou21portugalu21vsnetherlandsu21" tvg-name="Soccer | UEFA Euro U-21 : Portugal U21 vs Netherlands U21 (18:00)" tvg-logo="https://www.livescore.dk/assets/images/logo/participants/70x70/8557.png" group-title="Eventi Live",Soccer | UEFA Euro U-21 : Portugal U21 vs Netherlands U21 (18:00)
+#EXTINF:-1 tvg-id="uefaeurou21portugalu21vsnetherlandsu21" tvg-name="Soccer | UEFA Euro U-21 : Portugal U21 vs Netherlands U21 (18:00)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Portugal U21_vs_Netherlands U21.png" group-title="Eventi Live",Soccer | UEFA Euro U-21 : Portugal U21 vs Netherlands U21 (18:00)
 https://daddylive.dad/stream/stream-882.php
 
 #EXTINF:-1 tvg-id="fifaclubworldcupinternazionalevsurawareds" tvg-name="Soccer | FIFA Club World Cup : Internazionale vs Urawa Reds (21:00)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Internazionale_vs_Urawa Reds.png" group-title="Eventi Live",Soccer | FIFA Club World Cup : Internazionale vs Urawa Reds (21:00)
 https://daddylive.dad/stream/stream-1.php
 
-#EXTINF:-1 tvg-id="spainsegundadivisionrealoviedovsmirands" tvg-name="Soccer | Spain - Segunda Division : Real Oviedo vs Mirandés (21:00)" tvg-logo="https://cdn.freebiesupply.com/logos/large/2x/real-oviedo-logo-png-transparent.png" group-title="Eventi Live",Soccer | Spain - Segunda Division : Real Oviedo vs Mirandés (21:00)
+#EXTINF:-1 tvg-id="spainsegundadivisionrealoviedovsmirands" tvg-name="Soccer | Spain - Segunda Division : Real Oviedo vs Mirandés (21:00)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Real Oviedo_vs_Mirandés.png" group-title="Eventi Live",Soccer | Spain - Segunda Division : Real Oviedo vs Mirandés (21:00)
 https://daddylive.dad/stream/stream-877.php
 
 #EXTINF:-1 tvg-id="moto3italiangrandprixfreepractice2" tvg-name="Motorsport | Moto3 : Italian Grand Prix Free Practice 2 (08:35)" tvg-logo="https://www.thesportsdb.com/images/media/league/badge/ksxcfb1568976756.png" group-title="Eventi Live",Motorsport | Moto3 : Italian Grand Prix Free Practice 2 (08:35)
 https://daddylive.dad/stream/stream-575.php
 
-#EXTINF:-1 tvg-id="formulaejakartaeprixtherace" tvg-name="Motorsport | Formula E : Jakarta E-Prix: The Race (10:00)" tvg-logo="https://formulae-widgets.s3.amazonaws.com/html/assets/img/formula-e-logo.png" group-title="Eventi Live",Motorsport | Formula E : Jakarta E-Prix: The Race (10:00)
+#EXTINF:-1 tvg-id="formulaejakartaeprixtherace" tvg-name="Motorsport | Formula E : Jakarta E-Prix: The Race (10:00)" tvg-logo="https://latestlogo.com/wp-content/uploads/2024/02/virgin-racing-formula-e-logo.png" group-title="Eventi Live",Motorsport | Formula E : Jakarta E-Prix: The Race (10:00)
 https://daddylive.dad/stream/stream-878.php
 
-#EXTINF:-1 tvg-id="moto2italiangrandprixpractice2" tvg-name="Motorsport | Moto2 : Italian Grand Prix Practice 2 (10:45)" tvg-logo="https://1.bp.blogspot.com/--h_B_gQgA5M/X7dzqBuFa1I/AAAAAAAAKcA/_64dF25d7LQDis3x67-bnWXPQwPKkVAVACLcBGAsYHQ/w1200-h630-p-k-no-nu/Moto2.png" group-title="Eventi Live",Motorsport | Moto2 : Italian Grand Prix Practice 2 (10:45)
+#EXTINF:-1 tvg-id="moto2italiangrandprixpractice2" tvg-name="Motorsport | Moto2 : Italian Grand Prix Practice 2 (10:45)" tvg-logo="https://1.bp.blogspot.com/-dt6mSIGyYDs/XPVByA3agjI/AAAAAAAAIJs/_6R4IvD5Gh43Bsk4SSoCKUveuK953FQkgCLcBGAs/s72-c/Moto2%2BLogo%2B%255Bwww.blogovector.com%255D.png" group-title="Eventi Live",Motorsport | Moto2 : Italian Grand Prix Practice 2 (10:45)
 https://daddylive.dad/stream/stream-575.php
 
 #EXTINF:-1 tvg-id="motogpitaliangrandprixqualifying" tvg-name="Motorsport | MotoGP : Italian Grand Prix Qualifying (12:45)" tvg-logo="https://cdn.freebiesupply.com/logos/large/2x/moto-gp-1-logo-png-transparent.png" group-title="Eventi Live",Motorsport | MotoGP : Italian Grand Prix Qualifying (12:45)
@@ -35,7 +35,7 @@ https://daddylive.dad/stream/stream-575.php
 #EXTINF:-1 tvg-id="eurobasketwomenitalywvslithuaniaw" tvg-name="Basketball | Eurobasket Women : Italy W vs Lithuania W (21:00)" tvg-logo="https://raw.githubusercontent.com/nzo66/TV/main/logos/Italy W_vs_Lithuania W.png" group-title="Eventi Live",Basketball | Eurobasket Women : Italy W vs Lithuania W (21:00)
 https://daddylive.dad/stream/stream-882.php
 
-#EXTINF:-1 tvg-id="ucidownhillworldcupwomenelitevaldisolewhoopucimountainbikeworldseries" tvg-name="Cycling | UCI Downhill World Cup | Women Elite | Val di Sole WHOOP UCI Mountain Bike World Series (11:30)" tvg-logo="https://ucimtbworldseries.com/content/17843/IBbqL6vjp0aa94wThOonw2olUcyDwV2H10CifDMK.png" group-title="Eventi Live",Cycling | UCI Downhill World Cup | Women Elite | Val di Sole WHOOP UCI Mountain Bike World Series (11:30)
+#EXTINF:-1 tvg-id="ucidownhillworldcupwomenelitevaldisolewhoopucimountainbikeworldseries" tvg-name="Cycling | UCI Downhill World Cup | Women Elite | Val di Sole WHOOP UCI Mountain Bike World Series (11:30)" tvg-logo="https://cycleholix.de/wp-content/uploads/2018/08/bres_dhi_mj_standings-325x325.png" group-title="Eventi Live",Cycling | UCI Downhill World Cup | Women Elite | Val di Sole WHOOP UCI Mountain Bike World Series (11:30)
 https://daddylive.dad/stream/stream-878.php
 
 #EXTINF:-1 tvg-id="tourofswitzerlandstage7menneuhausenamrheinfallemmetten2073km" tvg-name="Cycling | Tour of Switzerland | Stage 7Men | Neuhausen am Rheinfall - Emmetten (207.3 km) (14:45)" tvg-logo="https://grandtourofswitzerland.jp/img/logo_bgwhite.png" group-title="Eventi Live",Cycling | Tour of Switzerland | Stage 7Men | Neuhausen am Rheinfall - Emmetten (207.3 km) (14:45)
